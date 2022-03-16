@@ -1,0 +1,3 @@
+D:/leeds/program project/cwk1/cmake-build-debug/CMakeFiles/cwk1.dir
+D:/leeds/program project/cwk1/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/leeds/program project/cwk1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
