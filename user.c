@@ -4,16 +4,42 @@
 
 
 BookList find_book_by_title (const char *title){
+    for(int i  = 1; i<= bookNum;++i){
+        if( == ){
+            break;
+        }
+    }
+    return res;
 
 }
 
 BookList find_book_by_author (const char *author){
+    for(int i = 1; i<=bookNum;++i){
+        if( == ){
 
+            break;
+        }
+    }
+    return res;
 }
 
 
 BookList find_book_by_year (unsigned int year){
+    for(int i = 1;i<=bookNum;++i){
+        if( == ){
 
+            break;
+        }
+    }
+    return res;
+
+}
+
+void borrow_book(){
+
+}
+
+void return_book(){
 
 }
 
