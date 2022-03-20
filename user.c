@@ -83,13 +83,16 @@ void userinterfscea(){
             find_book_by_year(year);
         }
         if(usOp == 4){
+            borrow_book();
 
 
         }
         if(usOp == 5){
+            remove_book();
 
         }
         if(usOp == 6){
+            List_all_books();
 
         }
         if(usOp == 7) exit(0);

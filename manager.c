@@ -4,7 +4,18 @@
 
 
 int add_book(Book book){
+    BookNum++;
 
+    struct _bookList *last, *now;
+    last = BookList;
+    while(last -> next != NULL) last = last->next;
+    now = (struct _BookList)malloc(sizeof(_BookList));
+    fscanf(File,"%d", &now->nowBook.id);
+    fscanf(FIle, "%s", now->nowBook.title);
+    fscanf(FIle, "%s", now->nowBook.author);
+    fscanf(FIle,"%d", &now->nowBook.copies);
+    last->next = now;
+    last = now;
 }
 
 int remove_book(Book book){
@@ -22,7 +33,6 @@ BookList find_book_by_author (const char *author){
 
 
 BookList find_book_by_year (unsigned int year){
-
 
 }
 

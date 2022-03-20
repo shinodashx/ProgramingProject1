@@ -4,13 +4,39 @@
 #include "book_management.h"
 
 
-void insert(struct _Book nowBook){
+int BookNum;
 
+
+void init(){
+    struct _Book *p, *head;
+    p = (struct _BookLisr*)malloc(sizeof(_BookList));
+    if(p != NULL){
+        head = p;
+        p->head = NULL;
+    }
+    return head;
+
+}
+
+void insert(struct _BookList BookList){
+    BookNum++;
+
+    struct _bookList *last, *now;
+    last = BookList;
+    while(last -> next != NULL) last = last->next;
+    now = (struct _BookList)malloc(sizeof(_BookList));
+    fscanf(File,"%d", &now->nowBook.id);
+    fscanf(FIle, "%s", now->nowBook.title);
+    fscanf(FIle, "%s", now->nowBook.author);
+    fscanf(FIle,"%d", &now->nowBook.copies);
+    last->next = now;
+    last = now;
 
 }
 
 
 void load_file(char *Data){
+    BookList = init();
 
     FILE *FIle  = fopen(Data, "r");
     if(fopen(Data, "r") == NULL){
@@ -22,13 +48,24 @@ void load_file(char *Data){
     int userNum;
     fscanf(FIle, "%d", &bookNum);
     for(int i = 1; i<=bookNum;++i){
-        struct _Book nowBook;
-        fscanf(File,"%d", &nowBook.id);
-        fscanf(FIle, "%s", nowBook.title);
-        fscanf(FIle, "%s", nowBook.authors);
-        fscanf(FIle,"%d", &nowBook.copies);
-        insert(nowBook);
+        insert(BookList);
     }
+}
+
+
+
+void write_file(struct _BookList *head){
+    struct _BookList *p;
+    p = head->next;;
+    while(p->next != NULL)
+    {
+        fprintf(File, "%d ", p->nowbook.id);
+        fprintf(FIle, "%s ", p->nowbook.title);
+        fprintf(File, "%s ", p->nowbook.author);
+        fprintf(File, "%d \n", p->nowbook.copies);
+
+    }
+
 }
 
 
