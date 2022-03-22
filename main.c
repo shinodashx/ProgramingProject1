@@ -74,6 +74,7 @@ void load_file(char *Data){
 void write_file(struct _BookList *Userhead, struct _UserList UserHead){
     fprintf("%d", BookNum);
     struct _BookList *p;
+    int Bookhead;
     p = Bookhead->next;;
     while(p->next != NULL)
     {

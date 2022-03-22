@@ -52,7 +52,7 @@ void run_interface() {
         if (type == 1) {
             user();
         } else {
-            manager();
+            managerif();
         }
     }
     if (op == 3) {

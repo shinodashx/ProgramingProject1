@@ -44,7 +44,7 @@ BookList find_book_by_author (const char *author){
     while(p->next!=NUll){
         if(p->nowBook.title == author){
             flag = 1;
-            _BookList res = p->next;
+            struct _BookList res = p->next;
             return res;
         }
     }

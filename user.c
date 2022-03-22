@@ -14,13 +14,18 @@ BookList find_book_by_title (const char *title){
 }
 
 BookList find_book_by_author (const char *author){
-    for(int i = 1; i<=bookNum;++i){
-        if( == ){
-
-            break;
+    struct _BookList *p;
+    p = BookHead->next;
+    int flag = 0;
+    while(p->next!=NUll){
+        if(p->nowBook.title == author){
+            flag = 1;
+            _BookList res = p->next;
+            return res;
         }
     }
-    return res;
+    if(!flag) p = p->next;
+    return p;
 }
 
 
