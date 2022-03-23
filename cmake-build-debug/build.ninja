@@ -73,6 +73,12 @@ build CMakeFiles/cwk1.dir/manager.c.obj: C_COMPILER__cwk1_Debug D$:/leeds/progra
   OBJECT_DIR = CMakeFiles\cwk1.dir
   OBJECT_FILE_DIR = CMakeFiles\cwk1.dir
 
+build CMakeFiles/cwk1.dir/book_management.c.obj: C_COMPILER__cwk1_Debug D$:/leeds/program$ project/cwk1/book_management.c || cmake_object_order_depends_target_cwk1
+  DEP_FILE = CMakeFiles\cwk1.dir\book_management.c.obj.d
+  FLAGS = -g -std=gnu17
+  OBJECT_DIR = CMakeFiles\cwk1.dir
+  OBJECT_FILE_DIR = CMakeFiles\cwk1.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target cwk1
@@ -81,7 +87,7 @@ build CMakeFiles/cwk1.dir/manager.c.obj: C_COMPILER__cwk1_Debug D$:/leeds/progra
 #############################################
 # Link the executable cwk1.exe
 
-build cwk1.exe: C_EXECUTABLE_LINKER__cwk1_Debug CMakeFiles/cwk1.dir/main.c.obj CMakeFiles/cwk1.dir/run_interface.c.obj CMakeFiles/cwk1.dir/user.c.obj CMakeFiles/cwk1.dir/manager.c.obj
+build cwk1.exe: C_EXECUTABLE_LINKER__cwk1_Debug CMakeFiles/cwk1.dir/main.c.obj CMakeFiles/cwk1.dir/run_interface.c.obj CMakeFiles/cwk1.dir/user.c.obj CMakeFiles/cwk1.dir/manager.c.obj CMakeFiles/cwk1.dir/book_management.c.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\cwk1.dir
