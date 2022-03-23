@@ -11,9 +11,9 @@ int main() {
 
     BookList BOOKLIST = *(BookList *) malloc(sizeof (BookList));
     UserList USERLIST = *(UserList *) malloc(sizeof (UserList));
-
     load_file(&BOOKLIST,&USERLIST);
-    run_interface();
+    run_interface(BOOKLIST, USERLIST);
+
     write_file();
     return 0;
 }

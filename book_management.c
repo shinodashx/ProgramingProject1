@@ -6,7 +6,6 @@
 
 int BookNum;
 int UserNum;
-
 int store_books(FILE *BookFile, BookList *BOOKLIST) {
     BookNum++;
     Book *now;
@@ -21,7 +20,6 @@ int store_books(FILE *BookFile, BookList *BOOKLIST) {
     now->next = NULL;
     last->next = now;
     last = now;
-
     return 1;
 }
 
@@ -48,6 +46,7 @@ int load_books(FILE *BookFile ,BookList *BOOKLIST){
     struct _Book *BookHead = (Book *) malloc(sizeof(Book));
     BookHead->next = NULL;
     BOOKLIST -> list = BookHead;
+    BookHead->
     int bookNum;
 
     fscanf(BookFile, "%d", &bookNum);
@@ -110,4 +109,121 @@ void write_file(FILE *BookFile, FILE *UserFile,BookList *BOOKLIST, UserList *USE
         fprintf(UserFile, "%s ", up->password);
     }
 
+}
+
+BookList * find_book_by_author(const char *author, BookList *BOOKLIST){
+    Book *p = BOOKLIST->list;
+    p = p->next;
+    int flag = 0;
+    while(p->next!=NULL){
+        if(p->authors == author){
+            flag = 1;
+            BookList *res;
+            res -> list = p;
+            return res;
+        }
+    }
+    if(!flag) {
+        BookList *res;
+        res->list = NULL;
+        return res;
+    }
+}
+
+BookList * find_book_by_title(const char *title, BookList *BOOKLIST){
+    Book *p = BOOKLIST->list;
+    p = p->next;
+    int flag = 0;
+    while(p->next!=NULL){
+        if(p->title == title){
+            flag = 1;
+            BookList *res;
+            res -> list = p;
+            return res;
+        }
+    }
+    if(!flag) {
+        BookList *res;
+        res->list = NULL;
+        return res;
+    }
+}
+
+BookList * find_book_by_year(unsigned int year, BookList *BOOKLIST){
+    Book *p = BOOKLIST->list;
+    p = p->next;
+    int flag = 0;
+    while(p->next!=NULL){
+        if(p->year == year){
+            flag = 1;
+            BookList *res;
+            res -> list = p;
+            return res;
+        }
+    }
+    if(!flag) {
+        BookList *res;
+        res->list = NULL;
+        return res;
+    }
+}
+
+
+int check_username(char *username, UserList *USERLIST){
+    User *p = USERLIST->list;
+    while(p->next!=NULL){
+        if(p->username == username){
+            return 0;
+        }
+    }
+    return 1;
+}
+ void User_register(BookList *BOOKLIST, UserList  *USERLIST){
+     printf("Please input your user name.");
+     char username[100];
+     while(1){
+         scanf("%s", username);
+         if(check_username(username,USERLIST)) break;
+         else {
+             printf("The username is used, please input another username.");
+         }
+     }
+     char password[1000];
+     printf("Please input your username.");
+     User *now;
+     int id;
+     now->username = username;
+     now->password = password;
+     now->userType = 0;
+     now->borrowednumber = 0;
+     User *last = USERLIST -> list;
+     while(last->next!=NULL) last = last->next;
+     now->id = last->id +1;
+     now->next = NULL;
+     last->next = now;
+}
+
+void Manager_register(BookList *BOOKLIST, UserList  *USERLIST){
+    printf("Please input your user name.");
+    char username[100];
+    while(1){
+        scanf("%s", username);
+        if(check_username(username, USERLIST)) break;
+        else {
+            printf("The username is used, please input another username.");
+        }
+    }
+    char password[1000];
+    printf("Please input your username.");
+    User *now;
+    int id;
+    now->username = username;
+    now->password = password;
+    now->userType = 1;
+    now->borrowednumber = 0;
+    User *last = USERLIST -> list;
+    while(last->next!=NULL) last = last->next;
+    now->id = last->id +1;
+    now->next = NULL;
+    last->next = now;
 }

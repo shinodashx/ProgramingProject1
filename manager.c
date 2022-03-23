@@ -3,108 +3,57 @@
 #include "book_management.h"
 
 
-int add_book(Book book){
-    BookNum++;
-    struct _bookList *last, *now;
-    last = BookList;
-    while(last -> next != NULL) last = last->next;
-    now = (struct _BookList)malloc(sizeof(_BookList));
-    fscanf(File,"%d", &now->nowBook.id);
-    fscanf(FIle, "%s", now->nowBook.title);
-    fscanf(FIle, "%s", now->nowBook.author);
-    fscanf(FIle,"%d", &now->nowBook.copies);
+int add_book(Book book, BookList *BOOKLIST) {
+    Book *now;
+    Book *last;
+    last = BOOKLIST->list;
+    while (last->next != NULL) last = last->next;
+    now->next = NULL;
     last->next = now;
     last = now;
 }
 
-int remove_book(Book book){
+int remove_book(Book book) {
 
 }
 
 
-BookList find_book_by_title (const char *title){
-    struct _BookList *p;
-    p = BookHead->next;
+int borrow_book(int id, BookList *BOOKLIST) {
+
+    Book *p = BOOKLIST -> list;
     int flag = 0;
-    while(p->next!=NUll){
-        if(p->nowBook.title == title){
+    while(p->next!=NULL){
+        if(p->id == id){
+            if(p->borrowed == 1){
+                return 2;
+            }
             flag = 1;
-            _BookList res = p->next;
-            return res;
+            p->borrowed = 1;
+            return 1;
         }
     }
-    if(!flag) p = p->next;
-    return p;
+    if(!flag) return 0;
 }
 
-BookList find_book_by_author (const char *author){
-    struct _BookList *p;
-    p = BookHead->next;
+
+int return_book(int id,BookList *BOOKLIST) {
+    Book *p = BOOKLIST -> list;
     int flag = 0;
-    while(p->next!=NUll){
-        if(p->nowBook.title == author){
+    while(p->next!=NULL){
+        if(p->id == id){
+            if(p->borrowed == 0){
+                return 1;
+            }
             flag = 1;
-            struct _BookList res = p->next;
-            return res;
+            p->borrowed = 0;
+            return 1;
         }
     }
-    if(!flag) p = p->next;
-    return p;
+    if(!flag) return 0;
 }
 
-
-BookList find_book_by_year (unsigned int year){
-    struct _BookList *p;
-    p = BookHead->next;
-    int flag = 0;
-    while(p->next!=NUll){
-        if(p->nowBook.title == year){
-            flag = 1;
-            _BookList res = p->next;
-            return res;
-        }
-    }
-    if(!flag) p = p->next;
-    return p;
-}
-
-void borrow_book(int id){
-    struct _BookList *p;
-    p = BookHead->next;
-    int flag = 0;
-    while(p->next!=NUll){
-        if(p->nowBook.id == id && p->nowBook.getatable == 1){
-            p->nowBook.getatable = 0;
-            flag = 1;
-            struct _BookList res = p->nowBook;
-            return res;
-            break;
-        }
-    }
-    if(!flag) p = p->next;
-    return p;
-}
-
-
-void return_book(int id){
-    struct _BookList *p;
-    p = BookHead->next;
-    int flag = 0;
-    while(p->next!=NUll){
-        if(p->nowBook.id == id && p->nowBook.getatable == 1){
-            p->nowBook.getatable = 0;
-            flag = 1;
-            struct _BookList res = p->nowBook;
-            return res;
-            break;
-        }
-    }
-    if(!flag) p = p->next;
-    return p;
-}
-
-void userinterfscea(){
-    while(1) {
+void manager_interface(BookList BOOKLIST, UserList USERLIST) {
+    while (1) {
         printf("################################################################");
         printf("#      Please choose your choice:(Input choice number)         #");
         printf("#      1.Add book                                              #");
@@ -118,93 +67,130 @@ void userinterfscea(){
         printf("#      9.exit                                                  #");
         printf("################################################################");
         int maOp;
-        scanf("%d",&maOp);
+        scanf("%d", &maOp);
         int usFlag = 1;
-        while(1){
-            if(maOp>=1&&maOp<=9) break;
+        while (1) {
+            if (maOp >= 1 && maOp <= 9) break;
             else {
                 printf("Error choice number");
                 scanf("%d", &maOp);
             }
         }
-        if(maOp == 1){
+        if (maOp == 1) {
             printf("");
-            char bookTitle[100];
-            char bookAuthor[100];
-            int bookYear;
-            scanf("%s", bookTitle);
-            scanf("%s",bookAuthor);
-            scanf("%d",bookYear);
+            Book book = *(Book *) malloc(sizeof(Book));
+            scanf("%s", book.title);
+            scanf("%s", book.authors);
+            scanf("%d", &book.year);
+            scanf("%s", &book.copies);
+            book.borrowed = 0;
+            add_book(book, &BOOKLIST);
 
         }
-        if(maOp == 2{
+        if (maOp == 2) {
             printf("");
             char bookTitle[100];
             char bookAuthor[100];
             int bookYear;
             scanf("%s", bookTitle);
-            scanf("%s",bookAuthor);
-            scanf("%d",bookYear);
+            scanf("%s", bookAuthor);
+            scanf("%d", bookYear);
         }
-        if(maOp == 3){
+        if (maOp == 3) {
             printf("Please input book title");
             char bookTitle[100];
             scanf("%s", bookTitle);
-            _BookList res = find_book_by_title(bookTitle);
-            if(res == NULL){
+            BookList *res = find_book_by_title(bookTitle, &BOOKLIST);
+            if (res == NULL) {
                 printf("Cannot find this book!\n");
             } else {
-                printf("%d ", res->nowbook.id);
-                printf("%s ", res->nowbook.title);
-                printf("%s ", res->nowbook.author);
-                printf("%d \n", res->nowbook.copies);
+                printf("%d ", res->list->id);
+                printf("%s ", res->list->title);
+                printf("%s ", res->list->authors);
+                printf("%s", res->list->year);
+                printf("%d \n", res->list->copies);
             }
         }
-        if(maOp == 4){
+        if (maOp == 4) {
             printf("Please input book author");
-            char author[100];
-            scanf("%s", author);
-            find_book_by_author(author);
-            _BookList res = find_book_by_title(bookTitle);
-            if(res == NULL){
+            char bookAuthor[100];
+            scanf("%s", bookAuthor);
+            BookList *res = find_book_by_author(bookAuthor, &BOOKLIST);
+            if (res == NULL) {
                 printf("Cannot find this book!\n");
             } else {
-                printf("%d ", res->nowbook.id);
-                printf("%s ", res->nowbook.title);
-                printf("%s ", res->nowbook.author);
-                printf("%d \n", res->nowbook.copies);
+                printf("%d ", res->list->id);
+                printf("%s ", res->list->title);
+                printf("%s ", res->list->authors);
+                printf("%s", res->list->year);
+                printf("%d \n", res->list->copies);
             }
         }
-        if(maOp == 5){
+        if (maOp == 5) {
             printf("Please input book year");
             int year;
             scanf("%d", year);
-            find_book_by_year(year);
-            _BookList res = find_book_by_title(bookTitle);
-            if(res == NULL){
+            BookList *res = find_book_by_year(year, &BOOKLIST);
+            if (res == NULL) {
                 printf("Cannot find this book!\n");
             } else {
-                printf("%d ", res->nowbook.id);
-                printf("%s ", res->nowbook.title);
-                printf("%s ", res->nowbook.author);
-                printf("%d \n", res->nowbook.copies);
+                printf("%d ", res->list->id);
+                printf("%s ", res->list->title);
+                printf("%s ", res->list->authors);
+                printf("%s", res->list->year);
+                printf("%d \n", res->list->copies);
             }
         }
-        if(maOp == 4){
-            struct _BookList res = borrow_book(id);
-            if(res == NULL){
-
-            } else {
-
+        if (maOp == 4) {
+            printf("1.Borrowed by book id.\n");
+            printf("2.Borrowed by book title.\n");
+            printf("3.borrowed by book author.\n");
+            printf("4.borrowed by book year.\n");
+            int op;
+            scanf("%d", &op);
+            if (op == 1) {
+                int id;
+                scanf("%d", &id);
+                borrow_book(id, &BOOKLIST);
+            } else if (op == 2) {
+                printf("Please input book title");
+                char bookTitle[100];
+                scanf("%s", bookTitle);
+                BookList *res = find_book_by_title(bookTitle, &BOOKLIST);
+                if (res == NULL) {
+                    printf("Cannot find this book!\n");
+                } else {
+                    borrow_book(res->list->id, &BOOKLIST);
+                }
+            } else if (op == 3) {
+                printf("Please input book author");
+                char bookAuthor[100];
+                scanf("%s", bookAuthor);
+                BookList *res = find_book_by_author(bookAuthor, &BOOKLIST);
+                if (res == NULL) {
+                    printf("Cannot find this book!\n");
+                } else {
+                    borrow_book(res->list->id, &BOOKLIST);
+                }
+            } else if (op == 4) {
+                printf("Please input book year");
+                int year;
+                scanf("%d", year);
+                BookList *res = find_book_by_year(year, &BOOKLIST);
+                if (res == NULL) {
+                    printf("Cannot find this book!\n");
+                } else {
+                    borrow_book(res->list->id, &BOOKLIST);
+                }
             }
         }
-        if(maOp == 5){
+        if (maOp == 5) {
 
         }
-        if(maOp == 6){
+        if (maOp == 6) {
 
         }
-        if(maOp == 7) exit(0);
+        if (maOp == 7) exit(0);
 
     }
 

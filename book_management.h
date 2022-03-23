@@ -16,6 +16,7 @@ typedef struct _Book {
     char *authors; //comma separated list of authors
     unsigned int year; // year of publication
     unsigned int copies; //number of copies the library has
+    unsigned int borrowed; // can or cannot be borrowed
     struct _Book *next; //pointer to the next book element
 }Book;
 
@@ -28,9 +29,11 @@ typedef struct _BookList {
 
 typedef struct _User{
     unsigned id;
-    int userType;
+    int userType;  //0 user 1 manager
     char *username;
     char *password;
+    int borrowednumber;
+    int borrowedId[11];
     struct _User *next;
 }User;
 
@@ -51,7 +54,7 @@ int load_books(FILE *file, BookList *BOOKLIST);
 
 //adds a book to the ones available to the library
 //returns 0 if the book could be added, or an error code otherwise
-int add_book(Book book);
+int add_book(Book book,BookList *BOOKLIST);
 
 //removes a book from the library
 //returns 0 if the book could be successfully removed, or an error code otherwise.
@@ -61,20 +64,24 @@ int remove_book(Book book);
 //returns a BookList structure, where the field "list" is a list of books, or null if no book with the 
 //provided title can be found. The length of the list is also recorded in the returned structure, with 0 in case
 //list is the NULL pointer.
-BookList find_book_by_title (const char *title);
+BookList * find_book_by_title (const char *title, BookList *BOOKLIST);
 
 //finds books with the given authors.
 //returns a Booklist structure, where the field "list" is a newly allocated list of books, or null if no book with the 
 //provided title can be found. The length of the list is also recorded in the returned structure, with 0 in case
 //list is the NULL pointer.
-BookList find_book_by_author (const char *author);
+BookList * find_book_by_author (const char *author,BookList *BOOKLIST);
 
 //finds books published in the given year.
 //returns a Booklist structure, where the field "list" is a list of books, or null if no book with the 
 //provided title can be found. The length of the list is also recorded in the returned structure, with 0 in case
 //list is the NULL pointer.
-BookList find_book_by_year (unsigned int year);
+BookList * find_book_by_year (unsigned int year, BookList *BOOKLIST);
 
 void write_file(FILE *BookFile, FILE *UserFile,BookList *BOOKLIST, UserList *USERLIST);
 
+
+void User_register(BookList *BOOKLIST, UserList  *USERLIST);
+void Manager_register(BookList *BOOKLIST, UserList  *USERLIST);
+int check_username(char *username, UserList *USERLIST);
 #endif

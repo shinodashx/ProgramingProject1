@@ -1,13 +1,26 @@
 #include <stdio.h>
 #include<stdlib.h>
+#include "book_management.h"
+#include "user.h"
+#include "manager.h"
 
 
-int userLogin(char a[], char b[]) {
-    int User_type = 1;
-    return User_type;
+int userLogin(char *username, char *password, UserList *USERLIST) {
+    User *p = USERLIST->list;
+    while(p->next!=NULL){
+        if(p->username == username) {
+            if(p->password == password){
+                if(p->userType == 0) return 0;
+                else return 1;
+            } else {
+                return 2;
+            }
+        }
+    }
+    return 3;
 }
 
-void run_interface() {
+void run_interface(BookList BOOKLIST, UserList USERLIST) {
     printf("Please choose your choice:(Input choice number)\n");
     printf("1.Register.\n");
     printf("2.Login.\n");
@@ -37,9 +50,9 @@ void run_interface() {
             }
         }
         if (opr == 1) {
-            Use_register();
+            User_register(BOOKLIST, USERLIST);
         } else {
-            Manager_register();
+            Manager_register(BOOKLIST, USERLIST);
         }
 
     }
@@ -49,10 +62,14 @@ void run_interface() {
         printf("Please input your user name:\n");
         printf("Please input your password:\n");
         int type = userLogin();
-        if (type == 1) {
-            user();
+        if (type == 0) {
+            user_interface(BOOKLIST,USERLIST);
+        } else if(type == 1){
+            manager_interface(BOOKLIST, USERLIST);
+        } else if(type == 2){
+            printf("Invaild password");
         } else {
-            managerif();
+            printf("Invalid username");
         }
     }
     if (op == 3) {
