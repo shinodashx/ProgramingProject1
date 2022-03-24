@@ -50,9 +50,9 @@ void run_interface(BookList BOOKLIST, UserList USERLIST) {
             }
         }
         if (opr == 1) {
-            User_register(BOOKLIST, USERLIST);
+            User_register(&BOOKLIST, &USERLIST);
         } else {
-            Manager_register(BOOKLIST, USERLIST);
+            Manager_register(&BOOKLIST, &USERLIST);
         }
 
     }
@@ -60,8 +60,13 @@ void run_interface(BookList BOOKLIST, UserList USERLIST) {
         char userName[100];
         char userPassword[100];
         printf("Please input your user name:\n");
+        scanf("%s",userName);
+        getchar();
         printf("Please input your password:\n");
-        int type = userLogin();
+        scanf("%s",userPassword);
+        getchar();
+        int type = userLogin(userName, userPassword, &USERLIST);
+        printf("%d",type);
         if (type == 0) {
             user_interface(BOOKLIST,USERLIST);
         } else if(type == 1){

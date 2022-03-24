@@ -21,7 +21,7 @@ typedef struct _Book {
 }Book;
 
 typedef struct _BookList {
-    Book* list; // pointer to a list of struct Book.
+    struct _Book *list; // pointer to a list of struct Book.
     unsigned int length; // number of elements in the (Book*) List
 }BookList;
 
@@ -64,19 +64,19 @@ int remove_book(Book book);
 //returns a BookList structure, where the field "list" is a list of books, or null if no book with the 
 //provided title can be found. The length of the list is also recorded in the returned structure, with 0 in case
 //list is the NULL pointer.
-BookList * find_book_by_title (const char *title, BookList *BOOKLIST);
+BookList find_book_by_title (const char *title, BookList *BOOKLIST);
 
 //finds books with the given authors.
 //returns a Booklist structure, where the field "list" is a newly allocated list of books, or null if no book with the 
 //provided title can be found. The length of the list is also recorded in the returned structure, with 0 in case
 //list is the NULL pointer.
-BookList * find_book_by_author (const char *author,BookList *BOOKLIST);
+BookList find_book_by_author (const char *author,BookList *BOOKLIST);
 
 //finds books published in the given year.
 //returns a Booklist structure, where the field "list" is a list of books, or null if no book with the 
 //provided title can be found. The length of the list is also recorded in the returned structure, with 0 in case
 //list is the NULL pointer.
-BookList * find_book_by_year (unsigned int year, BookList *BOOKLIST);
+BookList find_book_by_year (unsigned int year, BookList *BOOKLIST);
 
 void write_file(FILE *BookFile, FILE *UserFile,BookList *BOOKLIST, UserList *USERLIST);
 
@@ -84,4 +84,10 @@ void write_file(FILE *BookFile, FILE *UserFile,BookList *BOOKLIST, UserList *USE
 void User_register(BookList *BOOKLIST, UserList  *USERLIST);
 void Manager_register(BookList *BOOKLIST, UserList  *USERLIST);
 int check_username(char *username, UserList *USERLIST);
+
+void load_file(BookList *BOOKLIST, UserList *USERLIST);
+int load_users(FILE *UserFile, UserList *USERLIST);
+int store_users(FILE *BookFile, UserList *USERLIST);
+int store_books(FILE *BookFile, BookList *BOOKLIST);
+void listBook(BookList *BOOKLIST);
 #endif
