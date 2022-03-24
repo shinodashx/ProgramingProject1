@@ -4,5 +4,5 @@
 
 #ifndef CWK1_MANAGER_H
 #define CWK1_MANAGER_H
-void manager_interface(BookList BOOKLIST, UserList USERLIST);
+void manager_interface(BookList *BOOKLIST, UserList *USERLIST);
 #endif //CWK1_MANAGER_H

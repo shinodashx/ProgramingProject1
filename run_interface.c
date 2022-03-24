@@ -1,26 +1,28 @@
 #include <stdio.h>
 #include<stdlib.h>
+#include <string.h>
 #include "book_management.h"
 #include "user.h"
 #include "manager.h"
 
 
-int userLogin(char *username, char *password, UserList *USERLIST) {
-    User *p = USERLIST->list;
+int userLogin(const char *username, const char *password, UserList *USERLIST) {
+    User *p = USERLIST->list->next;
     while(p->next!=NULL){
-        if(p->username == username) {
-            if(p->password == password){
+        if(strcmp(p->username, username) == 0) {
+            if(strcmp(p->password, password) == 0){
                 if(p->userType == 0) return 0;
                 else return 1;
             } else {
                 return 2;
             }
         }
+        p = p->next;
     }
     return 3;
 }
 
-void run_interface(BookList BOOKLIST, UserList USERLIST) {
+void run_interface(BookList *BOOKLIST, UserList *USERLIST) {
     printf("Please choose your choice:(Input choice number)\n");
     printf("1.Register.\n");
     printf("2.Login.\n");
@@ -50,9 +52,9 @@ void run_interface(BookList BOOKLIST, UserList USERLIST) {
             }
         }
         if (opr == 1) {
-            User_register(&BOOKLIST, &USERLIST);
+            User_register(BOOKLIST, USERLIST);
         } else {
-            Manager_register(&BOOKLIST, &USERLIST);
+            Manager_register(BOOKLIST, USERLIST);
         }
 
     }
@@ -61,15 +63,15 @@ void run_interface(BookList BOOKLIST, UserList USERLIST) {
         char userPassword[100];
         printf("Please input your user name:\n");
         scanf("%s",userName);
-        getchar();
         printf("Please input your password:\n");
         scanf("%s",userPassword);
-        getchar();
-        int type = userLogin(userName, userPassword, &USERLIST);
+        int type = userLogin(userName, userPassword, USERLIST);
         printf("%d",type);
         if (type == 0) {
+            printf("Successfully login!\n");
             user_interface(BOOKLIST,USERLIST);
         } else if(type == 1){
+            printf("Successfully login!\n");
             manager_interface(BOOKLIST, USERLIST);
         } else if(type == 2){
             printf("Invaild password");

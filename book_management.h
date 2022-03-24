@@ -90,4 +90,5 @@ int load_users(FILE *UserFile, UserList *USERLIST);
 int store_users(FILE *BookFile, UserList *USERLIST);
 int store_books(FILE *BookFile, BookList *BOOKLIST);
 void listBook(BookList *BOOKLIST);
+void listUser(UserList *USERLIST);
 #endif

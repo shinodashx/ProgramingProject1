@@ -24,20 +24,21 @@ int remove_book(Book book) {
 
 
 
-void manager_interface(BookList BOOKLIST, UserList USERLIST) {
+void manager_interface(BookList *BOOKLIST, UserList *USERLIST) {
     while (1) {
-        printf("################################################################");
-        printf("#      Please choose your choice:(Input choice number)         #");
-        printf("#      1.Add book                                              #");
-        printf("#      2.Remove book                                           #");
-        printf("#      3.Find book by title.                                   #");
-        printf("#      4.Find book by author                                   #");
-        printf("#      5.Find book by year                                     #");
-        printf("#      6.Borrow book                                           #");
-        printf("#      7.Return book                                           #");
-        printf("#      8.List all books in library                             #");
-        printf("#      9.exit                                                  #");
-        printf("################################################################");
+        printf("================================================================\n");
+        printf("################################################################\n");
+        printf("#    Please choose your choice:(Input choice number)           #\n");
+        printf("#    1.Add book                                                #\n");
+        printf("#    2.Remove book                                             #\n");
+        printf("#    3.Find book by title.                                     #\n");
+        printf("#    4.Find book by author                                     #\n");
+        printf("#    5.Find book by year                                       #\n");
+        printf("#    6.Borrow book                                             #\n");
+        printf("#    7.Return book                                             #\n");
+        printf("#    8.List all books in library                               #\n");
+        printf("#    9.exit                                                    #\n");
+        printf("################################################################\n");
         int maOp;
         scanf("%d", &maOp);
         int usFlag = 1;
