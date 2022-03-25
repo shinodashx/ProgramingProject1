@@ -35,3 +35,13 @@ int return_book(int id,BookList *BOOKLIST) {
     }
     if(!flag) return 0;
 }
+
+int min(int x,int y){
+    if(x > y) return y;
+    else return x;
+}
+
+int max(int x, int y){
+    if(x>y) return x;
+    else return y;
+}

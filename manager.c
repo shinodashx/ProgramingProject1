@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "book_management.h"
 #include "utils.h"
 
@@ -10,6 +11,7 @@ int add_book(Book book, BookList *BOOKLIST) {
     now = &book;
     last = BOOKLIST->list;
     while (last->next != NULL) last = last->next;
+    now->id = last->id+1;
     now->next = NULL;
     last->next = now;
     last = now;
@@ -51,13 +53,22 @@ void manager_interface(BookList *BOOKLIST, UserList *USERLIST) {
         }
         if (maOp == 1) {
             printf("1");
-            Book book = *(Book *) malloc(sizeof(Book));
-            scanf("%s", book.title);
-            scanf("%s", book.authors);
-            scanf("%d", &book.year);
-            scanf("%d", &book.copies);
-            book.borrowed = 0;
-            add_book(book, &BOOKLIST);
+            Book *book = (Book *) malloc(sizeof(Book));
+            printf("Please input book title:");
+
+            char *title = malloc(sizeof(1024));
+            scanf("%s",title);
+            book->title = malloc(sizeof(strlen(title)+1));
+            book->title = title;
+
+            char *author = malloc(sizeof(1024));
+            scanf("%s",author);
+            book->authors = malloc(sizeof(strlen(author)+1));
+            book->authors = author;
+            scanf("%d", &book->year);
+            scanf("%d", &book->copies);
+            book->borrowed = 0;
+            add_book(*book, BOOKLIST);
 
         }
         if (maOp == 2) {
@@ -73,7 +84,7 @@ void manager_interface(BookList *BOOKLIST, UserList *USERLIST) {
             printf("Please input book title");
             char bookTitle[100];
             scanf("%s", bookTitle);
-            BookList res = find_book_by_title(bookTitle, &BOOKLIST);
+            BookList res = find_book_by_title(bookTitle, BOOKLIST);
             if(res.list == NULL){
                 printf("Cannot find this book!\n");
             } else {
@@ -88,7 +99,7 @@ void manager_interface(BookList *BOOKLIST, UserList *USERLIST) {
             printf("Please input book author");
             char bookAuthor[100];
             scanf("%s", bookAuthor);
-            BookList res = find_book_by_title(bookAuthor, &BOOKLIST);
+            BookList res = find_book_by_title(bookAuthor, BOOKLIST);
             if(res.list== NULL){
                 printf("Cannot find this book!\n");
             } else {
@@ -103,7 +114,7 @@ void manager_interface(BookList *BOOKLIST, UserList *USERLIST) {
             printf("Please input book author");
             char bookAuthor[100];
             scanf("%s", bookAuthor);
-            BookList res = find_book_by_title(bookAuthor, &BOOKLIST);
+            BookList res = find_book_by_title(bookAuthor, BOOKLIST);
             if(res.list == NULL){
                 printf("Cannot find this book!\n");
             } else {
@@ -124,37 +135,37 @@ void manager_interface(BookList *BOOKLIST, UserList *USERLIST) {
             if (op == 1) {
                 int id;
                 scanf("%d", &id);
-                borrow_book(id, &BOOKLIST);
+                borrow_book(id, BOOKLIST);
             } else if (op == 2) {
                 printf("Please input book title");
                 char bookTitle[100];
                 scanf("%s", bookTitle);
-                BookList res = find_book_by_title(bookTitle, &BOOKLIST);
+                BookList res = find_book_by_title(bookTitle, BOOKLIST);
                 if (res.list == NULL) {
                     printf("Cannot find this book!\n");
                 } else {
-                    borrow_book(res.list->id, &BOOKLIST);
+                    borrow_book(res.list->id, BOOKLIST);
                 }
             } else if (op == 3) {
                 printf("Please input book author");
                 char bookAuthor[100];
                 scanf("%s", bookAuthor);
-                BookList res = find_book_by_author(bookAuthor, &BOOKLIST);
+                BookList res = find_book_by_author(bookAuthor, BOOKLIST);
                 if (res.list == NULL) {
                     printf("Cannot find this book!\n");
                 } else {
-                    borrow_book(res.list->id, &BOOKLIST);
+                    borrow_book(res.list->id, BOOKLIST);
                 }
             } else if (op == 4) {
 
                 printf("Please input book year");
                 int year;
                 scanf("%d", &year);
-                BookList res = find_book_by_year(year, &BOOKLIST);
+                BookList res = find_book_by_year(year, BOOKLIST);
                 if (res.list == NULL) {
                     printf("Cannot find this book!\n");
                 } else {
-                    borrow_book(res.list->id, &BOOKLIST);
+                    borrow_book(res.list->id, BOOKLIST);
                 }
             }
         }

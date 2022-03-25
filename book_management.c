@@ -3,10 +3,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "book_management.h"
+#include "utils.h"
 
 
 int BookNum;
 int UserNum;
+
 int store_books(FILE *BookFile, BookList *BOOKLIST) {
     BookNum++;
     Book *now;
@@ -22,21 +24,21 @@ int store_books(FILE *BookFile, BookList *BOOKLIST) {
     char *x;
     x = strtok(str, '-');
     now->id = atoi(x);
-    printf("%d",now->id);
+    printf("%d", now->id);
 
-    x = strtok(str,'-');
-    now->title= malloc(strlen(x)+1);
-    now->title=x;
+    x = strtok(str, '-');
+    now->title = malloc(strlen(x) + 1);
+    now->title = x;
     now->title[strlen(x)] = '\0';
-    x = strtok(str,'-');
-    now->authors = malloc(strlen(x)+1);
+    x = strtok(str, '-');
+    now->authors = malloc(strlen(x) + 1);
     now->authors = x;
     now->authors[strlen(x)] = '\0';
-    x = strtok(str,'-');
+    x = strtok(str, '-');
     now->year = atoi(x);
-    x = strtok(str,'-');
+    x = strtok(str, '-');
     now->copies = atoi(x);
-    x = strtok(str,'-');
+    x = strtok(str, '-');
     now->borrowed = atoi(x);
 
 
@@ -48,7 +50,7 @@ int store_books(FILE *BookFile, BookList *BOOKLIST) {
 //    fscanf(BookFile,"%d",&now->year);
 //    fscanf(BookFile, "%d", &now->copies);
 //    fscanf(BookFile,"%d",&now->borrowed);
-    printf("%d %s\n", now->id, now->title);
+    printf("%s\n%s\n", now->id, now->title);
     now->next = NULL;
     last->next = now;
     return 1;
@@ -65,8 +67,8 @@ int store_users(FILE *BookFile, UserList *USERLIST) {
     fscanf(BookFile, "%d", &now->userType);
     fscanf(BookFile, "%s", now->username);
     fscanf(BookFile, "%s", now->password);
-    fscanf(BookFile,"%d",&now->borrowednumber);
-    for(int i = 0;i<=(int)(now->borrowednumber);++i){
+    fscanf(BookFile, "%d", &now->borrowednumber);
+    for (int i = 0; i <= (int) (now->borrowednumber); ++i) {
         fscanf(BookFile, "%d", &now->borrowedId[i]);
     }
     now->next = NULL;
@@ -74,10 +76,10 @@ int store_users(FILE *BookFile, UserList *USERLIST) {
     return 1;
 }
 
-int load_books(FILE *BookFile ,BookList *BOOKLIST){
+int load_books(FILE *BookFile, BookList *BOOKLIST) {
     Book *BookHead = (Book *) malloc(sizeof(Book));
-    BOOKLIST -> list = BookHead;
-    BookHead-> next = NULL;
+    BOOKLIST->list = BookHead;
+    BookHead->next = NULL;
     int bookNum;
     fscanf(BookFile, "%d\n", &bookNum);
     BookNum = 0;
@@ -90,26 +92,26 @@ int load_books(FILE *BookFile ,BookList *BOOKLIST){
 
         now = (Book *) malloc(sizeof(Book));
 
-        char *str= malloc(sizeof(1000));
+        char *str = malloc(sizeof(1000));
         fgets(str, 1024, BookFile);
         char *x;
         x = strtok(str, "-");
-        now->id = (int)atoi(x);
-        printf("%d\n",now->id);
+        now->id = (int) atoi(x);
+        printf("%d\n", now->id);
 
-        x = strtok(NULL,"-");
-        now->title= malloc(strlen(x)+1);
-        now->title=x;
+        x = strtok(NULL, "-");
+        now->title = malloc(strlen(x) + 1);
+        now->title = x;
         now->title[strlen(x)] = '\0';
-        x = strtok(NULL,"-");
-        now->authors = malloc(strlen(x)+1);
+        x = strtok(NULL, "-");
+        now->authors = malloc(strlen(x) + 1);
         now->authors = x;
         now->authors[strlen(x)] = '\0';
-        x = strtok(NULL,"-");
+        x = strtok(NULL, "-");
         now->year = atoi(x);
-        x = strtok(NULL,"-");
+        x = strtok(NULL, "-");
         now->copies = atoi(x);
-        x = strtok(NULL,"-");
+        x = strtok(NULL, "-");
         now->borrowed = atoi(x);
 
         now->next = NULL;
@@ -118,17 +120,17 @@ int load_books(FILE *BookFile ,BookList *BOOKLIST){
     listBook(BOOKLIST);
 }
 
-int load_users(FILE *UserFile, UserList *USERLIST){
+int load_users(FILE *UserFile, UserList *USERLIST) {
     User *UserHead = (User *) malloc(sizeof(User));
     UserHead->next = NULL;
     USERLIST->list = UserHead;
     int userNum;
     fscanf(UserFile, "%d\n", &userNum);
     UserNum = 0;
-    for(int i = 1; i<=userNum;++i){
+    for (int i = 1; i <= userNum; ++i) {
         UserNum++;
         User *now;
-        User *last = (User *) malloc(sizeof (User));
+        User *last = (User *) malloc(sizeof(User));
         last = USERLIST->list;
         while (last->next != NULL) last = last->next;
         now = (User *) malloc(sizeof(User));
@@ -136,23 +138,23 @@ int load_users(FILE *UserFile, UserList *USERLIST){
         fgets(str, 1024, UserFile);
         char *x;
         x = strtok(str, "-");
-        now->id = (int)atoi(x);
-        x = strtok(NULL,"-");
-        now->userType = (int)atoi(x);
-        x = strtok(NULL,"-");
-        now->username = malloc(strlen(x)+1);
+        now->id = (int) atoi(x);
+        x = strtok(NULL, "-");
+        now->userType = (int) atoi(x);
+        x = strtok(NULL, "-");
+        now->username = malloc(strlen(x) + 1);
         now->username = x;
         now->username[strlen(x)] = '\0';
-        x = strtok(NULL,"-");
-        now->password = malloc(strlen(x)+1);
+        x = strtok(NULL, "-");
+        now->password = malloc(strlen(x) + 1);
         now->password = x;
         now->password[strlen(x)] = '\0';
         puts(now->username);
         puts(now->password);
-        x = strtok(NULL,"-");
-        now->borrowednumber = (int)atoi(x);
-        for(int j = 1;j<=(int)now->borrowednumber;++j){
-            fscanf(UserFile,"%d\n",now->borrowedId[j]);
+        x = strtok(NULL, "-");
+        now->borrowednumber = (int) atoi(x);
+        for (int j = 1; j <= (int) now->borrowednumber; ++j) {
+            fscanf(UserFile, "%d\n", now->borrowedId[j]);
         }
         now->next = NULL;
         last->next = now;
@@ -167,13 +169,13 @@ void load_file(BookList *BOOKLIST, UserList *USERLIST) {
     if (BookFile == NULL) {
         printf("Error\nLibrary Data does exist: BookData\n");
     }
-    load_books(BookFile,BOOKLIST);
+    load_books(BookFile, BOOKLIST);
 
     FILE *UserFile = fopen("UserFile.txt", "r");
     if (UserFile == NULL) {
         printf("Error\nLibrary Data does exist: UserData\n");
     }
-    load_users(UserFile,USERLIST);
+    load_users(UserFile, USERLIST);
 
 }
 
@@ -201,104 +203,134 @@ void load_file(BookList *BOOKLIST, UserList *USERLIST) {
 //
 //}
 
-BookList find_book_by_author(const char *author, BookList *BOOKLIST){
+BookList find_book_by_author(const char *author, BookList *BOOKLIST) {
+
+    BookList  res;
+    res.length = 0;
+    Book *head = (Book*)malloc(sizeof(Book));
+    head->next = NULL;
+    res.list = head;
+
     Book *p = BOOKLIST->list;
-    p = p->next;
-    int flag = 0;
-    BookList *res;
-    while(p->next!=NULL){
-        if(p->authors == author){
-            flag = 1;
-            res -> list = p;
-            return *res;
+    while (p != NULL) {
+        int flag = 1;
+        if((int)strlen(author)!=(int)(strlen(p->authors))) flag = 0;
+        for(int i = 0;i<=min((int) strlen(author),(int)strlen(p->authors));++i){
+            if(author[i] != p->authors[i]) {
+                flag = 0;
+                break;
+            }
         }
+        if (flag) {
+            res.length = 1;
+            Book *now = (Book *) malloc(sizeof(Book));
+            memccpy(now,p,sizeof(Book),sizeof(Book));
+            now->next = NULL;
+            res.list->next = now;
+            return res;
+        }
+        p = p->next;
     }
-    if(!flag) {
-        BookList *res;
-        res->list = NULL;
-        return *res;
-    }
+    return res;
+
 }
 
-BookList find_book_by_title(const char *title, BookList *BOOKLIST){
-    Book *p = BOOKLIST->list;
-    p = p->next;
-    int flag = 0;
-    BookList *res;
-    while(p->next!=NULL){
-        if(p->title == title){
-            flag = 1;
-            res->list = p;
-            return *res;
+BookList find_book_by_title(const char *title, BookList *BOOKLIST) {
+    BookList  res;
+    res.length = 0;
+    Book *head = (Book*)malloc(sizeof(Book));
+    head->next = NULL;
+    res.list = head;
+    Book *p = BOOKLIST->list->next;
+    while (p != NULL) {
+        int flag = 1;
+        if((int)strlen(title)!=(int)(strlen(p->title))) flag = 0;
+        for(int i = 0;i<=min((int) strlen(title),(int)strlen(p->title));++i){
+            if(title[i] != p->title[i]) {
+                flag = 0;
+                break;
+            }
         }
+        if (flag) {
+            res.length = 1;
+            Book *now = (Book *) malloc(sizeof(Book));
+            memccpy(now,p,sizeof(Book),sizeof(Book));
+            now->next = NULL;
+            res.list->next = now;
+            return res;
+        }
+        p = p->next;
     }
-    if(!flag) {
-        BookList *res;
-        res->list = NULL;
-        return *res;
-    }
+    return res;
+
 }
 
-BookList find_book_by_year(unsigned int year, BookList *BOOKLIST){
+BookList find_book_by_year(unsigned int year, BookList *BOOKLIST) {
+
+    BookList res;
+    res.length = 0;
+    Book *head = (Book *) malloc(sizeof(Book));
+    head->next = NULL;
+    res.list = head;
+
     Book *p = BOOKLIST->list;
-    p = p->next;
-    int flag = 0;
-    BookList *res;
-    while(p->next!=NULL){
-        if(p->year == year){
-            flag = 1;
-            res -> list = p;
-            return *res;
+    while (p != NULL) {
+        int flag = 0;
+        if ((int) year == (int) p->year) flag = 1;
+        if (flag) {
+            res.length = 1;
+            Book *now = (Book *) malloc(sizeof(Book));
+            memccpy(now, p, sizeof(Book), sizeof(Book));
+            now->next = NULL;
+            res.list->next = now;
+            return res;
         }
+        p = p->next;
     }
-    if(!flag) {
-        BookList *res;
-        res->list = NULL;
-        return *res;
-    }
+    return res;
 }
 
-
-int check_username(char *username, UserList *USERLIST){
+int check_username(char *username, UserList *USERLIST) {
     User *p = USERLIST->list;
-    while(p->next!=NULL){
-        if(p->username == username){
+    while (p->next != NULL) {
+        if (strcmp(p->username, username)) {
             return 0;
         }
     }
     return 1;
 }
- void User_register(BookList *BOOKLIST, UserList  *USERLIST){
-     printf("Please input your user name.");
-     char username[100];
-     while(1){
-         scanf("%s", username);
-         if(check_username(username,USERLIST)) break;
-         else {
-             printf("The username is used, please input another username.");
-         }
-     }
-     char password[1000];
-     printf("Please input your username.");
-     User *now;
-     int id;
-     now->username = username;
-     now->password = password;
-     now->userType = 0;
-     now->borrowednumber = 0;
-     User *last = USERLIST -> list;
-     while(last->next!=NULL) last = last->next;
-     now->id = last->id +1;
-     now->next = NULL;
-     last->next = now;
-}
 
-void Manager_register(BookList *BOOKLIST, UserList  *USERLIST){
+void User_register(BookList *BOOKLIST, UserList *USERLIST) {
     printf("Please input your user name.");
     char username[100];
-    while(1){
+    while (1) {
         scanf("%s", username);
-        if(check_username(username, USERLIST)) break;
+        if (check_username(username, USERLIST)) break;
+        else {
+            printf("The username is used, please input another username.");
+        }
+    }
+    char password[1000];
+    printf("Please input your username.");
+    User *now;
+    int id;
+    now->username = username;
+    now->password = password;
+    now->userType = 0;
+    now->borrowednumber = 0;
+    User *last = USERLIST->list;
+    while (last->next != NULL) last = last->next;
+    now->id = last->id + 1;
+    now->next = NULL;
+    last->next = now;
+}
+
+void Manager_register(BookList *BOOKLIST, UserList *USERLIST) {
+    printf("Please input your user name.");
+    char username[100];
+    while (1) {
+        scanf("%s", username);
+        if (check_username(username, USERLIST)) break;
         else {
             printf("The username is used, please input another username.");
         }
@@ -311,27 +343,29 @@ void Manager_register(BookList *BOOKLIST, UserList  *USERLIST){
     now->password = password;
     now->userType = 1;
     now->borrowednumber = 0;
-    User *last = USERLIST -> list;
-    while(last->next!=NULL) last = last->next;
-    now->id = last->id +1;
+    User *last = USERLIST->list;
+    while (last->next != NULL) last = last->next;
+    now->id = last->id + 1;
     now->next = NULL;
     last->next = now;
 }
 
 
-void listBook(BookList *BOOKLIST){
+void listBook(BookList *BOOKLIST) {
     Book *cur = BOOKLIST->list->next;
-    while(cur -> next != NULL){
+    while (cur != NULL) {
         printf("%s\t%s\n", cur->title, cur->authors);
         cur = cur->next;
     }
+    //printf("%s\t%s\n", cur->title, cur->authors);
 }
 
 
-void listUser(UserList *USERLIST){
+void listUser(UserList *USERLIST) {
     User *cur = USERLIST->list->next;
-    while(cur -> next != NULL){
+    while (cur != NULL) {
         printf("%s\t%s\n", cur->username, cur->password);
         cur = cur->next;
     }
+    //printf("%s\t%s\n", cur->username, cur->password);
 }

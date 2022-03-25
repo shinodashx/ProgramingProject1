@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include<stdlib.h>
+#include <stdlib.h>
 #include <string.h>
 #include "book_management.h"
 #include "user.h"
@@ -8,7 +8,7 @@
 
 int userLogin(const char *username, const char *password, UserList *USERLIST) {
     User *p = USERLIST->list->next;
-    while(p->next!=NULL){
+    while(p!=NULL){
         if(strcmp(p->username, username) == 0) {
             if(strcmp(p->password, password) == 0){
                 if(p->userType == 0) return 0;

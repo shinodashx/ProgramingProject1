@@ -11,5 +11,6 @@
 
 int borrow_book(int id, BookList *BOOKLIST);
 int return_book(int id,BookList *BOOKLIST);
-
+int min(int x,int y);
+int max(int x, int y);
 #endif //CWK1_UTILS_H
