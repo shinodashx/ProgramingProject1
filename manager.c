@@ -26,7 +26,7 @@ int remove_book(Book book) {
 
 
 
-void manager_interface(BookList *BOOKLIST, UserList *USERLIST) {
+int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
     while (1) {
         printf("================================================================\n");
         printf("################################################################\n");
@@ -135,7 +135,7 @@ void manager_interface(BookList *BOOKLIST, UserList *USERLIST) {
             if (op == 1) {
                 int id;
                 scanf("%d", &id);
-                borrow_book(id, BOOKLIST);
+                borrow_book(id, userid, BOOKLIST, USERLIST);
             } else if (op == 2) {
                 printf("Please input book title");
                 char bookTitle[100];
@@ -144,7 +144,7 @@ void manager_interface(BookList *BOOKLIST, UserList *USERLIST) {
                 if (res.list == NULL) {
                     printf("Cannot find this book!\n");
                 } else {
-                    borrow_book(res.list->id, BOOKLIST);
+                    borrow_book(res.list->id, userid, BOOKLIST, USERLIST);
                 }
             } else if (op == 3) {
                 printf("Please input book author");
@@ -154,7 +154,7 @@ void manager_interface(BookList *BOOKLIST, UserList *USERLIST) {
                 if (res.list == NULL) {
                     printf("Cannot find this book!\n");
                 } else {
-                    borrow_book(res.list->id, BOOKLIST);
+                    borrow_book(res.list->id, userid, BOOKLIST, USERLIST);
                 }
             } else if (op == 4) {
 
@@ -165,7 +165,7 @@ void manager_interface(BookList *BOOKLIST, UserList *USERLIST) {
                 if (res.list == NULL) {
                     printf("Cannot find this book!\n");
                 } else {
-                    borrow_book(res.list->id, BOOKLIST);
+                    borrow_book(res.list->id, userid, BOOKLIST, USERLIST);
                 }
             }
         }
@@ -175,7 +175,7 @@ void manager_interface(BookList *BOOKLIST, UserList *USERLIST) {
         if (maOp == 6) {
 
         }
-        if (maOp == 7) exit(0);
+        if (maOp == 7) return 0;
 
     }
 

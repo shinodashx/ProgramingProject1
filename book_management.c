@@ -86,7 +86,7 @@ int load_books(FILE *BookFile, BookList *BOOKLIST) {
     for (int i = 1; i <= bookNum; ++i) {
         BookNum++;
         Book *now;
-        Book *last = (Book *) malloc(sizeof(Book));
+        Book *last;
         last = BOOKLIST->list;
         while (last->next != NULL) last = last->next;
 
@@ -130,7 +130,7 @@ int load_users(FILE *UserFile, UserList *USERLIST) {
     for (int i = 1; i <= userNum; ++i) {
         UserNum++;
         User *now;
-        User *last = (User *) malloc(sizeof(User));
+        User *last;
         last = USERLIST->list;
         while (last->next != NULL) last = last->next;
         now = (User *) malloc(sizeof(User));
@@ -210,8 +210,7 @@ BookList find_book_by_author(const char *author, BookList *BOOKLIST) {
     Book *head = (Book*)malloc(sizeof(Book));
     head->next = NULL;
     res.list = head;
-
-    Book *p = BOOKLIST->list;
+    Book *p = BOOKLIST->list->next;
     while (p != NULL) {
         int flag = 1;
         if((int)strlen(author)!=(int)(strlen(p->authors))) flag = 0;
@@ -290,82 +289,5 @@ BookList find_book_by_year(unsigned int year, BookList *BOOKLIST) {
     return res;
 }
 
-int check_username(char *username, UserList *USERLIST) {
-    User *p = USERLIST->list;
-    while (p->next != NULL) {
-        if (strcmp(p->username, username)) {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-void User_register(BookList *BOOKLIST, UserList *USERLIST) {
-    printf("Please input your user name.");
-    char username[100];
-    while (1) {
-        scanf("%s", username);
-        if (check_username(username, USERLIST)) break;
-        else {
-            printf("The username is used, please input another username.");
-        }
-    }
-    char password[1000];
-    printf("Please input your username.");
-    User *now;
-    int id;
-    now->username = username;
-    now->password = password;
-    now->userType = 0;
-    now->borrowednumber = 0;
-    User *last = USERLIST->list;
-    while (last->next != NULL) last = last->next;
-    now->id = last->id + 1;
-    now->next = NULL;
-    last->next = now;
-}
-
-void Manager_register(BookList *BOOKLIST, UserList *USERLIST) {
-    printf("Please input your user name.");
-    char username[100];
-    while (1) {
-        scanf("%s", username);
-        if (check_username(username, USERLIST)) break;
-        else {
-            printf("The username is used, please input another username.");
-        }
-    }
-    char password[1000];
-    printf("Please input your username.");
-    User *now;
-    int id;
-    now->username = username;
-    now->password = password;
-    now->userType = 1;
-    now->borrowednumber = 0;
-    User *last = USERLIST->list;
-    while (last->next != NULL) last = last->next;
-    now->id = last->id + 1;
-    now->next = NULL;
-    last->next = now;
-}
 
 
-void listBook(BookList *BOOKLIST) {
-    Book *cur = BOOKLIST->list->next;
-    while (cur != NULL) {
-        printf("%s\t%s\n", cur->title, cur->authors);
-        cur = cur->next;
-    }
-    //printf("%s\t%s\n", cur->title, cur->authors);
-}
-
-
-void listUser(UserList *USERLIST) {
-    User *cur = USERLIST->list->next;
-    while (cur != NULL) {
-        printf("%s\t%s\n", cur->username, cur->password);
-        cur = cur->next;
-    }
-    //printf("%s\t%s\n", cur->username, cur->password);
-}

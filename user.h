@@ -5,6 +5,6 @@
 #ifndef CWK1_USER_H
 #define CWK1_USER_H
 
-void user_interface();
+int user_interface(int userid, BookList *BOOKLIST, UserList *USERLIST);
 
 #endif //CWK1_USER_H

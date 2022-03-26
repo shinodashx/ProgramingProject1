@@ -81,14 +81,12 @@ BookList find_book_by_year (unsigned int year, BookList *BOOKLIST);
 void write_file(FILE *BookFile, FILE *UserFile,BookList *BOOKLIST, UserList *USERLIST);
 
 
-void User_register(BookList *BOOKLIST, UserList  *USERLIST);
-void Manager_register(BookList *BOOKLIST, UserList  *USERLIST);
-int check_username(char *username, UserList *USERLIST);
+
+
 
 void load_file(BookList *BOOKLIST, UserList *USERLIST);
 int load_users(FILE *UserFile, UserList *USERLIST);
 int store_users(FILE *BookFile, UserList *USERLIST);
 int store_books(FILE *BookFile, BookList *BOOKLIST);
-void listBook(BookList *BOOKLIST);
-void listUser(UserList *USERLIST);
+
 #endif
