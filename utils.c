@@ -4,37 +4,34 @@
 #include "book_management.h"
 
 
-int check_user_id(char *username, UserList *USERLIST){
+int check_user_id(char *username, UserList *USERLIST) {
     User *p = USERLIST->list->next;
-    while(p!= NULL){
-        if(strcmp(p->username, username) == 0){
+    while (p != NULL) {
+        if (strcmp(p->username, username) == 0) {
             return p->id;
         }
         p = p->next;
     }
 }
 
-int borrow_book(int bookid, int userid,BookList *BOOKLIST,UserList *USERLIST) {
+int borrow_book(int bookid, int userid, BookList *BOOKLIST, UserList *USERLIST) {
     User *pp = USERLIST->list->next;
-//    while(pp!= NULL){
-//        if(pp->id == userid) {
-//
-//        }
-//    }
     Book *p = BOOKLIST->list->next;
     while (p != NULL) {
         if (p->id == bookid) {
-            if (p->borrowed == 1) {
+            if (p->copies == 0) {
                 return 2;
             }
-            p->borrowed = 1;
-            while(pp!=NULL){
-                if(userid == pp->id){
-                    pp->borrowednumber = pp->borrowednumber +1;
+            p->borrowed = p->borrowed + 1;
+            p->copies = p->copies - 1;
+            while (pp != NULL) {
+                if (userid == pp->id) {
+                    pp->borrowednumber = pp->borrowednumber + 1;
                     pp->borrowedId[pp->borrowednumber] = p->id;
                 }
-                return 1;
+                pp = pp->next;
             }
+            return 1;
         }
         p = p->next;
     }
@@ -42,20 +39,37 @@ int borrow_book(int bookid, int userid,BookList *BOOKLIST,UserList *USERLIST) {
 }
 
 
-int return_book(int bookid, BookList *BOOKLIST) {
-    Book *p = BOOKLIST->list;
-    int flag = 0;
-    while (p->next != NULL) {
-        if (p->id == bookid) {
-            if (p->borrowed == 0) {
-                return 1;
+int return_book(int bookid, int userid, BookList *BOOKLIST, UserList *USERLIST) {
+    User *pp = USERLIST->list;
+    int flag = 1;
+    while (pp != NULL) {
+        if (pp->id == userid) {
+            int cnt = 0;
+            int pos = -1;
+            for (int i = 1; i <= pp->borrowednumber; ++i) {
+                if (bookid == pp->borrowedId[i]) {
+                    cnt++;
+                    pos = i;
+                }
             }
-            flag = 1;
-            p->borrowed = 0;
+            if (cnt == 0) return 0;
+            for (int i = pos; i <= pp->borrowednumber; ++i) {
+                pp->borrowedId[i] = pp->borrowedId[i + 1];
+            }
+        }
+        pp = pp->next;
+    }
+    Book *p = BOOKLIST->list;
+    while (p != NULL) {
+        if (p->id == bookid) {
+            p->borrowed = p->borrowed - 1;
+            p->copies = p->copies + 1;
             return 1;
         }
+        p = p->next;
     }
-    if (!flag) return 0;
+    return -1;
+
 }
 
 int min(int x, int y) {
@@ -110,6 +124,7 @@ void User_register(BookList *BOOKLIST, UserList *USERLIST) {
     now->id = last->id + 1;
     now->next = NULL;
     last->next = now;
+    USERLIST->length = USERLIST->length + 1;
 }
 
 void Manager_register(BookList *BOOKLIST, UserList *USERLIST) {
@@ -127,7 +142,7 @@ void Manager_register(BookList *BOOKLIST, UserList *USERLIST) {
     char *password = malloc(sizeof(1000));
     printf("================================================================\n");
     printf("Please input your username.");
-    User *now = (User *)malloc(sizeof(User));
+    User *now = (User *) malloc(sizeof(User));
     int id;
     now->username = username;
     now->password = password;
@@ -138,10 +153,8 @@ void Manager_register(BookList *BOOKLIST, UserList *USERLIST) {
     now->id = last->id + 1;
     now->next = NULL;
     last->next = now;
+    USERLIST->length = USERLIST->length + 1;
 }
-
-
-
 
 
 void listBook(BookList *BOOKLIST) {
@@ -161,4 +174,41 @@ void listUser(UserList *USERLIST) {
         cur = cur->next;
     }
     //printf("%s\t%s\n", cur->username, cur->password);
+}
+
+int list_my_borrowedbook(int userid, BookList *BOOKLIST, UserList *USERLIST){
+    Book  *bp = BOOKLIST->list->next;
+    User *up = USERLIST->list->next;
+    int tot = 0;
+    int cnt = 1;
+    int tmp[11];
+    for(int i = 0;i<=10;++i){
+        tmp[i] = -1;
+    }
+    while(up!=NULL){
+        if(up->id == userid){
+            if(up->borrowednumber == 0) return 1;
+            for(int i = 1; i<=(int)up->borrowednumber;++i){
+                tmp[i] = up->borrowedId[i];
+            }
+            tot = up->borrowednumber;
+        }
+        up = up->next;
+    }
+    for(int i = 1; i<=tot;++i) {
+        while (bp != NULL) {
+            if (bp->id == tmp[i]) {
+                printf("================================================================\n");
+                printf("book id: %d\t", bp->id);
+                printf("title: %s\t", bp->title);
+                printf("authors: %s\t", bp->authors);
+                printf("year: %d\t", bp->year);
+                printf("copies: %d\n", bp->copies);
+                break;
+            }
+            bp = bp->next;
+        }
+        bp = BOOKLIST->list;
+    }
+    return 0;
 }

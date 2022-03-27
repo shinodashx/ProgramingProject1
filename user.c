@@ -15,21 +15,32 @@ int user_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
         printf("#    3.Find book by year                                       #\n");
         printf("#    4.Borrow book                                             #\n");
         printf("#    5.Return book                                             #\n");
-        printf("#    6.exit                                                    #\n");
+        printf("#    6.List my borrowed books                                  #\n");
+        printf("#    7.exit                                                    #\n");
         printf("################################################################\n");
         printf("================================================================\n");
 
-        int usOp;
-        scanf("%d", &usOp);
-        int usFlag = 1;
-        while (1) {
-            if (usOp >= 1 && usOp <= 6) break;
-            else {
-                printf("================================================================\n");
-                printf("Error choice number\n");
-                printf("Please input your choice:\n");
-                scanf("%d", &usOp);
+        char OP[100];
+        scanf("%s", OP);
+        int OP_flag = 1;
+        for (int i = 0; i < (int) strlen(OP); ++i) {
+            if (OP[i] < '0' || OP[i] > '7') {
+                OP_flag = 0;
+                break;
             }
+        }
+        if (!OP_flag) {
+            printf("================================================================\n");
+            printf("Error choice, please choose your choice:(Input choice number)\n");
+            continue;
+        }
+
+
+        int usOp = (int) atoi(OP);
+        if (usOp > 9 || usOp < 1) {
+            printf("================================================================\n");
+            printf("Error choice, please choose your choice:(Input choice number)\n");
+            continue;
         }
         if (usOp == 1) {
             printf("================================================================\n");
@@ -93,16 +104,59 @@ int user_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
         }
         if (usOp == 4) {
             printf("================================================================\n");
+            User *p = USERLIST->list->next;
+            int flag = 1;
+            while(p!=NULL){
+                if(p->id == userid) {
+                    if(p->borrowednumber == 8) flag = 0;
+                    break;
+                }
+                p = p->next;
+            }
+            if(!flag) {
+                printf("================================================================\n");
+                printf("You have borrowed 8 books, please return books.\n");
+                continue;
+            }
+
             printf("1.Borrowed by book id.\n");
             printf("2.Borrowed by book title.\n");
             printf("3.borrowed by book author.\n");
             printf("4.borrowed by book year.\n");
-            int op;
-            scanf("%d", &op);
+            char OP[100];
+            scanf("%s", OP);
+            int OP_flag = 1;
+            for (int i = 0; i < (int) strlen(OP); ++i) {
+                if (OP[i] < '0' || OP[i] > '9') {
+                    OP_flag = 0;
+                    break;
+                }
+            }
+            if(!OP_flag){
+                printf("Invalid choice!\n");
+                continue;
+            }
+            int op = (int)atoi(OP);
+            if(op>4||op<1){
+                printf("Invalid choice!\n");
+                continue;
+            }
             if (op == 1) {
-                int id;
-                printf("Please input book id\n");
-                scanf("%d", &id);
+                char idc[110];
+                printf("Please input book id:\n");
+                scanf("%s", idc);
+                int idcflag = 1;
+                for(int i = 0;i<(int)strlen(idc);++i){
+                    if(idc[i] > '9' || idc[i]<'0') {
+                        idcflag = 0;
+                        break;
+                    }
+                }
+                if(!idcflag ) {
+                    printf("Invalid id!\n");
+                    break;
+                }
+                int id = (int)atoi(idc);
                 int resb = borrow_book(id, userid, BOOKLIST, USERLIST);
                 if (resb == 1) {
                     printf("Successfully\n");
@@ -136,7 +190,7 @@ int user_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
                 char bookAuthor[100];
                 scanf("%s", bookAuthor);
                 BookList res = find_book_by_author(bookAuthor, BOOKLIST);
-                if (res.list == NULL) {
+                if (res.length == 0) {
                     printf("================================================================\n");
                     printf("Cannot find this book!\n");
                 } else {
@@ -152,10 +206,22 @@ int user_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
             } else if (op == 4) {
                 printf("================================================================\n");
                 printf("Please input book year\n");
-                int year;
-                scanf("%d", &year);
+                char yearc[110];
+                scanf("%s", yearc);
+                int idcflag = 1;
+                for(int i = 0;i<(int)strlen(yearc);++i){
+                    if(yearc[i] > '9' || yearc[i]<'0') {
+                        idcflag = 0;
+                        break;
+                    }
+                }
+                if(!idcflag ) {
+                    printf("Invalid id!\n");
+                    break;
+                }
+                int year = (int)atoi(yearc);
                 BookList res = find_book_by_year(year, BOOKLIST);
-                if (res.list == NULL) {
+                if (res.length == 0) {
                     printf("================================================================\n");
                     printf("Cannot find this book!\n");
                 } else {
@@ -164,10 +230,21 @@ int user_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
             }
         }
         if (usOp == 5) {
-//            return_book();
+            printf("================================================================\n");
+            printf("Please input book id:\n");
+            int bookid;
+            scanf("%d", &bookid);
+            int resr = return_book(bookid, userid, BOOKLIST, USERLIST);
+            if (resr == 1) printf("Successfully!\n");
+            if (resr == 0) printf("You haven't borrowed this book!\n");
+            if (resr == -1) printf("This book is not in library!\n");
         }
-
-        if (usOp == 6) return 0;
+        if(usOp == 6){
+            printf("================================================================\n");
+            int res = list_my_borrowedbook(userid,BOOKLIST,USERLIST);
+            if(res == 1) printf("You don't have borrowed books.\n");
+        }
+        if (usOp == 7) return 0;
 
     }
 

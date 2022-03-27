@@ -15,11 +15,13 @@ void User_register(BookList *BOOKLIST, UserList  *USERLIST);
 void Manager_register(BookList *BOOKLIST, UserList  *USERLIST);
 
 int borrow_book(int bookid, int userid,BookList *BOOKLIST,UserList *USERLIST);
-int return_book(int id,BookList *BOOKLIST);
+int return_book(int bookid, int userid, BookList *BOOKLIST,UserList *USERLIST);
 int min(int x,int y);
 int max(int x, int y);
 
 
 void listBook(BookList *BOOKLIST);
 void listUser(UserList *USERLIST);
+
+int list_my_borrowedbook(int userid, BookList *BOOKLIST, UserList *USERLIST);
 #endif //CWK1_UTILS_H

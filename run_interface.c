@@ -9,10 +9,10 @@
 
 int userLogin(const char *username, const char *password, UserList *USERLIST) {
     User *p = USERLIST->list->next;
-    while(p!=NULL){
-        if(strcmp(p->username, username) == 0) {
-            if(strcmp(p->password, password) == 0){
-                if(p->userType == 0) return 0;
+    while (p != NULL) {
+        if (strcmp(p->username, username) == 0) {
+            if (strcmp(p->password, password) == 0) {
+                if (p->userType == 0) return 0;
                 else return 1;
             } else {
                 return 2;
@@ -25,9 +25,8 @@ int userLogin(const char *username, const char *password, UserList *USERLIST) {
 
 //int check_admin_code(char *)
 
-void run_interface(BookList *BOOKLIST, UserList *USERLIST) {
-
-    while(1) {
+void run_interface(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList *USERLIST) {
+    while (1) {
         printf("================================================================\n");
         printf("Please choose your choice:(Input choice number)\n");
         printf("1.Register.\n");
@@ -52,8 +51,8 @@ void run_interface(BookList *BOOKLIST, UserList *USERLIST) {
         }
 
 
-        int op = (int)atoi(OP);
-        if(op > 3|| op<1){
+        int op = (int) atoi(OP);
+        if (op > 3 || op < 1) {
             printf("================================================================\n");
             printf("Error choice, please choose your choice:(Input choice number)\n");
             continue;
@@ -66,7 +65,7 @@ void run_interface(BookList *BOOKLIST, UserList *USERLIST) {
 
             char RG_OP[100];
             int rg_op;
-            while(1){
+            while (1) {
                 scanf("%s", RG_OP);
                 int RG_flag = 1;
                 for (int i = 0; i < (int) strlen(RG_OP); ++i) {
@@ -75,16 +74,16 @@ void run_interface(BookList *BOOKLIST, UserList *USERLIST) {
                         break;
                     }
                 }
-                if(!RG_flag){
+                if (!RG_flag) {
                     printf("================================================================\n");
                     printf("Error choice, please choose your choice:(Input choice number)\n");
                     continue;
                 }
-                rg_op = (int)atoi(RG_OP);
-                if(rg_op == 1||rg_op == 2) break;
+                rg_op = (int) atoi(RG_OP);
+                if (rg_op == 1 || rg_op == 2) break;
             }
 
-            if (rg_op== 1) {
+            if (rg_op == 1) {
                 User_register(BOOKLIST, USERLIST);
             } else {
                 Manager_register(BOOKLIST, USERLIST);
@@ -104,20 +103,21 @@ void run_interface(BookList *BOOKLIST, UserList *USERLIST) {
             if (type == 0) {
                 printf("================================================================\n");
                 printf("Successfully login!\n");
-                int Userid = check_user_id(userName,USERLIST);
-                int uer_op = user_interface(Userid,BOOKLIST, USERLIST);
+                int Userid = check_user_id(userName, USERLIST);
+                int uer_op = user_interface(Userid, BOOKLIST, USERLIST);
             } else if (type == 1) {
                 printf("================================================================\n");
                 printf("Successfully login!\n");
-                int Userid = check_user_id(userName,USERLIST);
-                int user_op = manager_interface(Userid,BOOKLIST, USERLIST);
+                int Userid = check_user_id(userName, USERLIST);
+                int user_op = manager_interface(Userid, BOOKLIST, USERLIST);
             } else if (type == 2) {
-                printf("Invalid password");
+                printf("Invalid password\n");
             } else {
-                printf("Invalid username");
+                printf("Invalid username\n");
             }
         }
         if (op == 3) {
+            store_file(BookFile, UserFile, BOOKLIST, USERLIST);
             exit(0);
         }
     }
