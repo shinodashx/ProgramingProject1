@@ -10,6 +10,9 @@ int BookNum;
 int UserNum;
 
 int load_books(FILE *file, BookList *BOOKLIST) {
+    if (file == NULL) {
+        return 1;
+    }
     Book *BookHead = (Book *) malloc(sizeof(Book));
     BOOKLIST->list = BookHead;
     BookHead->next = NULL;
@@ -49,10 +52,12 @@ int load_books(FILE *file, BookList *BOOKLIST) {
         last->next = now;
     }
     BOOKLIST->length = bookNum;
+    return 0;
     //listBook(BOOKLIST);
 }
 
 int load_users(FILE *file, UserList *USERLIST) {
+    if(file == NULL) return 1;
     User *UserHead = (User *) malloc(sizeof(User));
     UserHead->next = NULL;
     USERLIST->list = UserHead;
@@ -93,22 +98,26 @@ int load_users(FILE *file, UserList *USERLIST) {
     }
     USERLIST->length = userNum;
     //listUser(USERLIST);
+    return 0;
 }
 
 
 void load_file(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList *USERLIST) {
 
     FILE *Book_File = fopen(BookFile, "r");
-    if (Book_File == NULL) {
-        printf("Error\nLibrary Data does exist: BookData\n");
-    }
-    load_books(Book_File, BOOKLIST);
 
-    FILE *User_File = fopen(UserFile, "r");
-    if (User_File == NULL) {
-        printf("Error\nLibrary Data does exist: UserData\n");
+    int res = load_books(Book_File, BOOKLIST);
+    if(res == 1) {
+        printf("Error!\nLibrary Data does exist: %s\n", BookFile);
+        exit(0);
     }
+    FILE *User_File = fopen(UserFile, "r");
+
     load_users(User_File, USERLIST);
+    if(res == 1) {
+        printf("Error\nLibrary Data does exist: %s\n", UserFile);
+        exit(0);
+    }
     fclose(Book_File);
     fclose(User_File);
 }
@@ -251,6 +260,7 @@ BookList find_book_by_year(unsigned int year, BookList *BOOKLIST) {
         }
         p = p->next;
     }
+    res.list = NULL;
     return res;
 }
 

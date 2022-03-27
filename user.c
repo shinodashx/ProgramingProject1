@@ -56,11 +56,11 @@ int user_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
                 printf("Cannot find this book:!\n");
             } else {
                 printf("================================================================\n");
-                printf("%d\t", res.list->next->id);
-                printf("%s\t", res.list->next->title);
-                printf("%s\t", res.list->next->authors);
-                printf("%d\t", res.list->next->year);
-                printf("%d\n", res.list->next->copies);
+                printf("book id: %d\t", res.list->next->id);
+                printf("title: %s\t", res.list->next->title);
+                printf("author: %s\t", res.list->next->authors);
+                printf("year: %d\t", res.list->next->year);
+                printf("copies: %d\n", res.list->next->copies);
             }
         }
         if (usOp == 2) {
@@ -77,11 +77,11 @@ int user_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
                 printf("Cannot find this book:!\n");
             } else {
                 printf("================================================================\n");
-                printf("%d\t", res.list->next->id);
-                printf("%s\t", res.list->next->title);
-                printf("%s\t", res.list->next->authors);
-                printf("%d\t", res.list->next->year);
-                printf("%d\n", res.list->next->copies);
+                printf("book id: %d\t", res.list->next->id);
+                printf("title: %s\t", res.list->next->title);
+                printf("author: %s\t", res.list->next->authors);
+                printf("year: %d\t", res.list->next->year);
+                printf("copies: %d\n", res.list->next->copies);
             }
         }
         if (usOp == 3) {
@@ -95,11 +95,11 @@ int user_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
                 printf("Cannot find this book:!\n");
             } else {
                 printf("================================================================\n");
-                printf("%d\t", res.list->next->id);
-                printf("%s\t", res.list->next->title);
-                printf("%s\t", res.list->next->authors);
-                printf("%d\t", res.list->next->year);
-                printf("%d\n", res.list->next->copies);
+                printf("book id: %d\t", res.list->next->id);
+                printf("title: %s\t", res.list->next->title);
+                printf("author: %s\t", res.list->next->authors);
+                printf("year: %d\t", res.list->next->year);
+                printf("copies: %d\n", res.list->next->copies);
             }
         }
         if (usOp == 4) {

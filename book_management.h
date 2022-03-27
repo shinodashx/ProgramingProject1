@@ -77,6 +77,11 @@ BookList find_book_by_author(const char *author, BookList *BOOKLIST);
 //list is the NULL pointer.
 BookList find_book_by_year(unsigned int year, BookList *BOOKLIST);
 
+
+
+
+
+
 void store_file(char *BookFile,char *UserFile,BookList *BOOKLIST, UserList *USERLIST);
 
 
