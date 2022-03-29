@@ -36,9 +36,9 @@ void run_interface(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList 
 
 
         char OP[100];
-        scanf("%s", OP);
+        fgets(OP,1024, stdin);
         int OP_flag = 1;
-        for (int i = 0; i < (int) strlen(OP); ++i) {
+        for (int i = 0; i < (int) strlen(OP)-1; ++i) {
             if (OP[i] < '0' || OP[i] > '9') {
                 OP_flag = 0;
                 break;
@@ -66,10 +66,11 @@ void run_interface(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList 
             char RG_OP[100];
             int rg_op;
             while (1) {
-                scanf("%s", RG_OP);
+//                scanf("%s", RG_OP);
+                fgets(RG_OP,1024, stdin);
                 int RG_flag = 1;
-                for (int i = 0; i < (int) strlen(RG_OP); ++i) {
-                    if (RG_OP[i] < '0' || RG_OP[i] > '9') {
+                for (int i = 0; i < (int) strlen(RG_OP) -1 ; ++i) {
+                    if (RG_OP[i] < '0' || RG_OP[i] > '2') {
                         RG_flag = 0;
                         break;
                     }
@@ -83,11 +84,12 @@ void run_interface(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList 
                 if (rg_op == 1 || rg_op == 2) break;
             }
 
-            if (rg_op == 1) {
-                User_register(BOOKLIST, USERLIST);
-            } else {
-                Manager_register(BOOKLIST, USERLIST);
-            }
+//            if (rg_op == 1) {
+//                User_register(BOOKLIST, USERLIST);
+//            } else {
+//                Manager_register(BOOKLIST, USERLIST);
+//            }
+            user_register((rg_op - 1), BOOKLIST, USERLIST);
 
         }
         if (op == 2) {
@@ -96,9 +98,11 @@ void run_interface(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList 
             printf("================================================================\n");
             printf("Please input your user name:\n");
             scanf("%s", userName);
+            getchar();
             printf("================================================================\n");
             printf("Please input your password:\n");
             scanf("%s", userPassword);
+            getchar();
             int type = userLogin(userName, userPassword, USERLIST);
             if (type == 0) {
                 printf("================================================================\n");

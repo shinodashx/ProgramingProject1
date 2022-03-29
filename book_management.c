@@ -16,54 +16,87 @@ int load_books(FILE *file, BookList *BOOKLIST) {
     Book *BookHead = (Book *) malloc(sizeof(Book));
     BOOKLIST->list = BookHead;
     BookHead->next = NULL;
-    int bookNum;
-    fscanf(file, "%d\n", &bookNum);
-    BookNum = 0;
-    for (int i = 1; i <= bookNum; ++i) {
-        BookNum++;
-        Book *now;
-        Book *last;
-        last = BOOKLIST->list;
-        while (last->next != NULL) last = last->next;
-
-        now = (Book *) malloc(sizeof(Book));
-
-        char *str = malloc(sizeof(1000));
-        fgets(str, 1024, file);
-        char *x;
-        x = strtok(str, "-");
-        now->id = (int) atoi(x);
-        x = strtok(NULL, "-");
-        now->title = malloc(strlen(x) + 1);
-        now->title = x;
-        now->title[strlen(x)] = '\0';
-        x = strtok(NULL, "-");
-        now->authors = malloc(strlen(x) + 1);
-        now->authors = x;
-        now->authors[strlen(x)] = '\0';
-        x = strtok(NULL, "-");
-        now->year = atoi(x);
-        x = strtok(NULL, "-");
-        now->copies = atoi(x);
-        x = strtok(NULL, "-");
-        now->borrowed = atoi(x);
-
-        now->next = NULL;
-        last->next = now;
+    char booknum[100];
+    int bookNum = 0;
+//    fscanf(file, "%d\n", &bookNum);
+    while (fscanf(file,"%s\n", booknum) != EOF) {
+//    while((int) fgets(booknum, 1000, file) != EOF){
+        int cnt = 0;
+        for (int i = 0; i < (int) strlen(booknum)  - 1; ++i) {
+            if (booknum[i] > '9' || booknum[i] < '0') {
+                cnt++;
+            }
+        }
+        if (cnt == 0||booknum[0] == '\n') break;
+        else {
+            printf("Book data error!\n");
+            exit(0);
+        }
     }
-    BOOKLIST->length = bookNum;
+    bookNum = (int) atoi(booknum);
+    BookNum = 0;
+    if (bookNum != 0) {
+        for (int i = 1; i <= bookNum; ++i) {
+            BookNum++;
+            Book *now;
+            Book *last;
+            last = BOOKLIST->list;
+            while (last->next != NULL) last = last->next;
+
+            now = (Book *) malloc(sizeof(Book));
+            char *str = malloc(sizeof(1000));
+            fgets(str, 1024, file);
+            char *x;
+            x = strtok(str, "-");
+            now->id = (int) atoi(x);
+            x = strtok(NULL, "-");
+            now->title = malloc(strlen(x) + 1);
+            now->title = x;
+            now->title[strlen(x)] = '\0';
+            x = strtok(NULL, "-");
+            now->authors = malloc(strlen(x) + 1);
+            now->authors = x;
+            now->authors[strlen(x)] = '\0';
+            x = strtok(NULL, "-");
+            now->year = atoi(x);
+            x = strtok(NULL, "-");
+            now->copies = atoi(x);
+            x = strtok(NULL, "-");
+            now->borrowed = atoi(x);
+
+            now->next = NULL;
+            last->next = now;
+        }
+        BOOKLIST->length = bookNum;
+    }
     return 0;
     //listBook(BOOKLIST);
 }
 
 int load_users(FILE *file, UserList *USERLIST) {
-    if(file == NULL) return 1;
+    if (file == NULL) return 1;
     User *UserHead = (User *) malloc(sizeof(User));
     UserHead->next = NULL;
     USERLIST->list = UserHead;
-    int userNum;
-    fscanf(file, "%d\n", &userNum);
-    UserNum = 0;
+    char usernum[100];
+    int userNum = 0;
+//    fscanf(file, "%d\n", &bookNum);
+    while (fscanf(file,"%s\n", usernum) != EOF) {
+//    while((int) fgets(booknum, 1000, file) != EOF){
+        int cnt = 0;
+        for (int i = 0; i < (int) strlen(usernum)  - 1; ++i) {
+            if (usernum[i] > '9' || usernum[i] < '0') {
+                cnt++;
+            }
+        }
+        if (cnt == 0||usernum[0] == '\n') break;
+        else {
+            printf("Book data error!\n");
+            exit(0);
+        }
+    }
+    userNum = (int) atoi(usernum);
+    BookNum = 0;
     for (int i = 1; i <= userNum; ++i) {
         UserNum++;
         User *now;
@@ -107,14 +140,14 @@ void load_file(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList *USE
     FILE *Book_File = fopen(BookFile, "r");
 
     int res = load_books(Book_File, BOOKLIST);
-    if(res == 1) {
+    if (res == 1) {
         printf("Error!\nLibrary Data does exist: %s\n", BookFile);
         exit(0);
     }
     FILE *User_File = fopen(UserFile, "r");
 
     load_users(User_File, USERLIST);
-    if(res == 1) {
+    if (res == 1) {
         printf("Error\nLibrary Data does exist: %s\n", UserFile);
         exit(0);
     }
@@ -152,8 +185,8 @@ int store_users(FILE *file, UserList *USERLIST) {
         fprintf(file, "%s-", up->username);
         fprintf(file, "%s-", up->password);
         fprintf(file, "%d-\n", up->borrowednumber);
-        for(int i = 1; i<=(int)up->borrowednumber;++i){
-            fprintf(file,"%d\n",up->borrowedId[i]);
+        for (int i = 1; i <= (int) up->borrowednumber; ++i) {
+            fprintf(file, "%d\n", up->borrowedId[i]);
         }
         up = up->next;
     }
@@ -328,7 +361,7 @@ int add_book(Book book, BookList *BOOKLIST) {
     now->year = book.year;
     now->copies = book.copies;
     BOOKLIST->length = BOOKLIST->length + 1;
-    last = BOOKLIST->list->next;
+    last = BOOKLIST->list;
     while (last->next != NULL) last = last->next;
     now->id = last->id + 1;
     now->next = NULL;

@@ -4,15 +4,7 @@
 #include "book_management.h"
 
 
-int check_user_id(char *username, UserList *USERLIST) {
-    User *p = USERLIST->list->next;
-    while (p != NULL) {
-        if (strcmp(p->username, username) == 0) {
-            return p->id;
-        }
-        p = p->next;
-    }
-}
+
 
 int borrow_book(int bookid, int userid, BookList *BOOKLIST, UserList *USERLIST) {
     User *pp = USERLIST->list->next;
@@ -82,6 +74,15 @@ int max(int x, int y) {
     else return y;
 }
 
+int check_user_id(char *username, UserList *USERLIST) {
+    User *p = USERLIST->list->next;
+    while (p != NULL) {
+        if (strcmp(p->username, username) == 0) {
+            return p->id;
+        }
+        p = p->next;
+    }
+}
 
 int check_username(char *username, UserList *USERLIST) {
     User *p = USERLIST->list->next;
@@ -98,7 +99,8 @@ int check_username(char *username, UserList *USERLIST) {
     return 1;
 }
 
-void User_register(BookList *BOOKLIST, UserList *USERLIST) {
+
+void user_register(int usertype, BookList *BOOKLIST, UserList *USERLIST) {
     printf("================================================================\n");
     printf("Please input your user name:\n");
     char *username = malloc(sizeof(1000));
@@ -113,6 +115,7 @@ void User_register(BookList *BOOKLIST, UserList *USERLIST) {
     char *password = malloc(sizeof(1000));
     printf("Please input your password:\n");
     scanf("%s", password);
+    getchar();
     User *now = (User *) malloc(sizeof(User));
     int id;
     now->username = username;
@@ -126,35 +129,35 @@ void User_register(BookList *BOOKLIST, UserList *USERLIST) {
     last->next = now;
     USERLIST->length = USERLIST->length + 1;
 }
-
-void Manager_register(BookList *BOOKLIST, UserList *USERLIST) {
-    printf("================================================================\n");
-    printf("Please input your user name.");
-    char *username = malloc(sizeof(1000));
-    while (1) {
-        scanf("%s", username);
-        if (check_username(username, USERLIST)) break;
-        else {
-            printf("================================================================\n");
-            printf("The username is used, please input another username.");
-        }
-    }
-    char *password = malloc(sizeof(1000));
-    printf("================================================================\n");
-    printf("Please input your username.");
-    User *now = (User *) malloc(sizeof(User));
-    int id;
-    now->username = username;
-    now->password = password;
-    now->userType = 1;
-    now->borrowednumber = 0;
-    User *last = USERLIST->list;
-    while (last->next != NULL) last = last->next;
-    now->id = last->id + 1;
-    now->next = NULL;
-    last->next = now;
-    USERLIST->length = USERLIST->length + 1;
-}
+//
+//void Manager_register(BookList *BOOKLIST, UserList *USERLIST) {
+//    printf("================================================================\n");
+//    printf("Please input your user name:\n");
+//    char *username = malloc(sizeof(1000));
+//    while (1) {
+//        scanf("%s", username);
+//        if (check_username(username, USERLIST)) break;
+//        else {
+//            printf("================================================================\n");
+//            printf("The username is used, please input another username.\n");
+//        }
+//    }
+//    char *password = malloc(sizeof(1000));
+//    printf("Please input your password:\n");
+//    scanf("%s", password);
+//    User *now = (User *) malloc(sizeof(User));
+//    int id;
+//    now->username = username;
+//    now->password = password;
+//    now->userType = 1;
+//    now->borrowednumber = 0;
+//    User *last = USERLIST->list->next;
+//    while (last->next != NULL) last = last->next;
+//    now->id = last->id + 1;
+//    now->next = NULL;
+//    last->next = now;
+//    USERLIST->length = USERLIST->length + 1;
+//}
 
 
 void listBook(BookList *BOOKLIST) {
