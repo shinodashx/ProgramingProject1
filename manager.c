@@ -20,24 +20,9 @@ int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
         printf("#    8.List my borrowed books                                  #\n");
         printf("#    9.exit                                                    #\n");
         printf("################################################################\n");
-        char OP[100];
-        scanf("%s", OP);
-        int OP_flag = 1;
-        for (int i = 0; i < (int) strlen(OP); ++i) {
-            if (OP[i] < '0' || OP[i] > '9') {
-                OP_flag = 0;
-                break;
-            }
-        }
-        if (!OP_flag) {
-            printf("================================================================\n");
-            printf("Error choice, please choose your choice:(Input choice number)\n");
-            continue;
-        }
-
-
-        int maOp = (int) atoi(OP);
-        if (maOp > 9 || maOp < 1) {
+        int maOp = get_op();
+//        printf("%d", usOp);
+        if (maOp == -1||maOp > 7 || maOp < 1) {
             printf("================================================================\n");
             printf("Error choice, please choose your choice:(Input choice number)\n");
             continue;
@@ -109,13 +94,7 @@ int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
                 printf("================================================================\n");
                 printf("Cannot find this book:!\n");
             } else {
-                printf("================================================================\n");
-                printf("================================================================\n");
-                printf("book id: %d\t", res.list->next->id);
-                printf("title: %s\t", res.list->next->title);
-                printf("author: %s\t", res.list->next->authors);
-                printf("year: %d\t", res.list->next->year);
-                printf("copies: %d\n", res.list->next->copies);
+                print_books(res);
             }
         }
         if (maOp == 4) {
@@ -131,12 +110,7 @@ int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
                 printf("================================================================\n");
                 printf("Cannot find this book:!\n");
             } else {
-                printf("================================================================\n");
-                printf("book id: %d\t", res.list->next->id);
-                printf("title: %s\t", res.list->next->title);
-                printf("author: %s\t", res.list->next->authors);
-                printf("year: %d\t", res.list->next->year);
-                printf("copies: %d\n", res.list->next->copies);
+                print_books(res);
             }
         }
         if (maOp == 5) {
@@ -162,12 +136,7 @@ int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
                 printf("================================================================\n");
                 printf("Cannot find this book:!\n");
             } else {
-                printf("================================================================\n");
-                printf("book id: %d\t", res.list->next->id);
-                printf("title: %s\t", res.list->next->title);
-                printf("author: %s\t", res.list->next->authors);
-                printf("year: %d\t", res.list->next->year);
-                printf("copies: %d\n", res.list->next->copies);
+                print_books(res);
             }
         }
         if (maOp == 6) {
@@ -186,33 +155,26 @@ int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
                 printf("You have borrowed 8 books, please return books.\n");
                 continue;
             }
-            printf("================================================================\n");
+
             printf("1.Borrowed by book id.\n");
             printf("2.Borrowed by book title.\n");
             printf("3.borrowed by book author.\n");
             printf("4.borrowed by book year.\n");
-            char OP[100];
-            scanf("%s", OP);
-            int OP_flag = 1;
-            for (int i = 0; i < (int) strlen(OP); ++i) {
-                if (OP[i] < '0' || OP[i] > '9') {
-                    OP_flag = 0;
-                    break;
+            int br_op;
+            while (1) {
+                br_op = get_op();
+                if (br_op == -1 || br_op > 4 || br_op < 1) {
+                    printf("================================================================\n");
+                    printf("Error choice, please choose your choice:(Input choice number)\n");
+                    continue;
                 }
+                break;
             }
-            if(!OP_flag){
-                printf("Invalid choice!\n");
-                continue;
-            }
-            int op = (int)atoi(OP);
-            if(op>4||op<1){
-                printf("Invalid choice!\n");
-                continue;
-            }
-            if (op == 1) {
+            if (br_op == 1) {
                 char idc[110];
                 printf("Please input book id:\n");
                 scanf("%s", idc);
+                getchar();
                 int idcflag = 1;
                 for(int i = 0;i<(int)strlen(idc);++i){
                     if(idc[i] > '9' || idc[i]<'0') {
@@ -233,45 +195,21 @@ int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
                 } else {
                     printf("Cannot find this book");
                 }
-            } else if (op == 2) {
+            } else if (br_op == 2) {
                 printf("================================================================\n");
                 printf("Please input book title\n");
                 char bookTitle[100];
                 scanf("%s", bookTitle);
                 BookList res = find_book_by_title(bookTitle, BOOKLIST);
-                if (res.length == 0) {
-                    printf("================================================================\n");
-                    printf("Cannot find this book!\n");
-                } else {
-                    int resb = borrow_book((int) res.list->next->id, userid, BOOKLIST, USERLIST);
-                    if (resb == 1) {
-                        printf("Successfully\n");
-                    } else if (resb == 2) {
-                        printf("Be borrowed\n");
-                    } else {
-                        printf("Cannot find this book\n");
-                    }
-                }
-            } else if (op == 3) {
+                borrow_function(res,userid,BOOKLIST,USERLIST);
+            } else if (br_op == 3) {
                 printf("================================================================\n");
                 printf("Please input book author\n");
                 char bookAuthor[100];
                 scanf("%s", bookAuthor);
                 BookList res = find_book_by_author(bookAuthor, BOOKLIST);
-                if (res.length == 0) {
-                    printf("================================================================\n");
-                    printf("Cannot find this book!\n");
-                } else {
-                    int resb = borrow_book((int) res.list->next->id, userid, BOOKLIST, USERLIST);
-                    if (resb == 1) {
-                        printf("Successfully\n");
-                    } else if (resb == 2) {
-                        printf("Be borrowed\n");
-                    } else {
-                        printf("Cannot find this book");
-                    }
-                }
-            } else if (op == 4) {
+                borrow_function(res,userid,BOOKLIST,USERLIST);
+            } else if (br_op == 4) {
                 printf("================================================================\n");
                 printf("Please input book year\n");
                 char yearc[110];
@@ -289,12 +227,7 @@ int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
                 }
                 int year = (int)atoi(yearc);
                 BookList res = find_book_by_year(year, BOOKLIST);
-                if (res.length == 0) {
-                    printf("================================================================\n");
-                    printf("Cannot find this book!\n");
-                } else {
-                    borrow_book(res.list->next->id, userid, BOOKLIST, USERLIST);
-                }
+                borrow_function(res,userid,BOOKLIST,USERLIST);
             }
         }
         if (maOp == 7) {
@@ -324,7 +257,10 @@ int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
             int res = list_my_borrowedbook(userid,BOOKLIST,USERLIST);
             if(res == 1) printf("You don't have borrowed books.\n");
         }
-        if (maOp == 9) return 0;
+        if (maOp == 9) {
+            getchar();
+            return 0;
+        }
 
     }
 

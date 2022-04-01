@@ -23,8 +23,6 @@ int userLogin(const char *username, const char *password, UserList *USERLIST) {
     return 3;
 }
 
-//int check_admin_code(char *)
-
 void run_interface(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList *USERLIST) {
     while (1) {
         printf("================================================================\n");
@@ -34,24 +32,8 @@ void run_interface(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList 
         printf("3.Exit.\n");
         printf("================================================================\n");
 
-
-        char OP[100];
-        fgets(OP,1024, stdin);
-        int OP_flag = 1;
-        for (int i = 0; i < (int) strlen(OP)-1; ++i) {
-            if (OP[i] < '0' || OP[i] > '9') {
-                OP_flag = 0;
-                break;
-            }
-        }
-        if (!OP_flag) {
-            printf("================================================================\n");
-            printf("Error choice, please choose your choice:(Input choice number)\n");
-            continue;
-        }
-
-
-        int op = (int) atoi(OP);
+        int op = get_op();
+        if (op == -1) continue;
         if (op > 3 || op < 1) {
             printf("================================================================\n");
             printf("Error choice, please choose your choice:(Input choice number)\n");
@@ -63,32 +45,16 @@ void run_interface(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList 
             printf("1.User.\n");
             printf("2.Manager.\n");
 
-            char RG_OP[100];
             int rg_op;
             while (1) {
-//                scanf("%s", RG_OP);
-                fgets(RG_OP,1024, stdin);
-                int RG_flag = 1;
-                for (int i = 0; i < (int) strlen(RG_OP) -1 ; ++i) {
-                    if (RG_OP[i] < '0' || RG_OP[i] > '2') {
-                        RG_flag = 0;
-                        break;
-                    }
-                }
-                if (!RG_flag) {
+                rg_op = get_op();
+                if (rg_op == -1 || rg_op > 2 || rg_op < 1) {
                     printf("================================================================\n");
                     printf("Error choice, please choose your choice:(Input choice number)\n");
                     continue;
                 }
-                rg_op = (int) atoi(RG_OP);
                 if (rg_op == 1 || rg_op == 2) break;
             }
-
-//            if (rg_op == 1) {
-//                User_register(BOOKLIST, USERLIST);
-//            } else {
-//                Manager_register(BOOKLIST, USERLIST);
-//            }
             user_register((rg_op - 1), BOOKLIST, USERLIST);
 
         }

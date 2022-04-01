@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
+#include <stdlib.h>
 #include "book_management.h"
 
 
@@ -214,4 +215,45 @@ int list_my_borrowedbook(int userid, BookList *BOOKLIST, UserList *USERLIST){
         bp = BOOKLIST->list;
     }
     return 0;
+}
+
+void print_books(BookList res){
+    printf("================================================================\n");
+    printf("book id: %d\t", res.list->next->id);
+    printf("title: %s\t", res.list->next->title);
+    printf("author: %s\t", res.list->next->authors);
+    printf("year: %d\t", res.list->next->year);
+    printf("copies: %d\n", res.list->next->copies);
+}
+void borrow_function(BookList res, int userid, BookList *BOOKLIST, UserList *USERLIST){
+    if (res.length == 0) {
+        printf("================================================================\n");
+        printf("Cannot find this book!\n");
+    } else {
+        int resb = borrow_book((int) res.list->next->id, userid, BOOKLIST, USERLIST);
+        if (resb == 1) {
+            printf("Successfully\n");
+        } else if (resb == 2) {
+            printf("Be borrowed\n");
+        } else {
+            printf("Cannot find this book\n");
+        }
+    }
+}
+
+int get_op(){
+    char OP[100];
+    fgets(OP,1024, stdin);
+    int OP_flag = 1;
+    for (int i = 0; i < (int) strlen(OP)-1; ++i) {
+        if (OP[i] < '0' || OP[i] > '9') {
+            OP_flag = 0;
+            break;
+        }
+    }
+    if (!OP_flag) {
+        return  -1;
+    }
+    int res = (int)atoi(OP);
+    return res;
 }
