@@ -19,15 +19,15 @@ int load_books(FILE *file, BookList *BOOKLIST) {
     char booknum[100];
     int bookNum = 0;
 //    fscanf(file, "%d\n", &bookNum);
-    while (fscanf(file,"%s\n", booknum) != EOF) {
+    while (fscanf(file, "%s\n", booknum) != EOF) {
 //    while((int) fgets(booknum, 1000, file) != EOF){
         int cnt = 0;
-        for (int i = 0; i < (int) strlen(booknum)  - 1; ++i) {
+        for (int i = 0; i < (int) strlen(booknum) - 1; ++i) {
             if (booknum[i] > '9' || booknum[i] < '0') {
                 cnt++;
             }
         }
-        if (cnt == 0||booknum[0] == '\n') break;
+        if (cnt == 0 || booknum[0] == '\n') break;
         else {
             printf("Book data error!\n");
             exit(0);
@@ -81,15 +81,15 @@ int load_users(FILE *file, UserList *USERLIST) {
     char usernum[100];
     int userNum = 0;
 //    fscanf(file, "%d\n", &bookNum);
-    while (fscanf(file,"%s\n", usernum) != EOF) {
+    while (fscanf(file, "%s\n", usernum) != EOF) {
 //    while((int) fgets(booknum, 1000, file) != EOF){
         int cnt = 0;
-        for (int i = 0; i < (int) strlen(usernum)  - 1; ++i) {
+        for (int i = 0; i < (int) strlen(usernum) - 1; ++i) {
             if (usernum[i] > '9' || usernum[i] < '0') {
                 cnt++;
             }
         }
-        if (cnt == 0||usernum[0] == '\n') break;
+        if (cnt == 0 || usernum[0] == '\n') break;
         else {
             printf("Book data error!\n");
             exit(0);
@@ -335,22 +335,6 @@ int remove_book(Book book, BookList *BOOKLIST) {
         p = p->next;
     }
 }
-
-
-//int add_book(Book *book, BookList *BOOKLIST) {
-//    if(book->year > 2022) return 1;
-//    else if(book->copies > 2022) return 2;
-//    Book *now;
-//    Book *last;
-//    now = &book;
-//    BOOKLIST->length = BOOKLIST->length + 1;
-//    last = BOOKLIST->list->next;
-//    while (last->next != NULL) last = last->next;
-//    book->id = last->id+1;
-//    book->next = NULL;
-//    last->next = book;
-//    return 0;
-//}
 
 int add_book(Book book, BookList *BOOKLIST) {
     if (book.year > 2022) return 1;

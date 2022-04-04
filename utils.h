@@ -27,4 +27,8 @@ int list_my_borrowedbook(int userid, BookList *BOOKLIST, UserList *USERLIST);
 void print_books(BookList res);
 void borrow_function(BookList res, int userid, BookList *BOOKLIST, UserList *USERLIST);
 int get_op();
+
+void find_book(int choice, BookList *BOOKLIST);
+void borrow(int userid, BookList *BOOKLIST, UserList *USERLIST);
+void return_(int userid, BookList *BOOKLIST, UserList *USERLIST);
 #endif //CWK1_UTILS_H

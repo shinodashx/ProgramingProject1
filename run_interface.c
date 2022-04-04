@@ -56,7 +56,6 @@ void run_interface(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList 
                 if (rg_op == 1 || rg_op == 2) break;
             }
             user_register((rg_op - 1), BOOKLIST, USERLIST);
-
         }
         if (op == 2) {
             char userName[100];
