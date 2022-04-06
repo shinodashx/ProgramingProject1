@@ -31,4 +31,6 @@ int get_op();
 void find_book(int choice, BookList *BOOKLIST);
 void borrow(int userid, BookList *BOOKLIST, UserList *USERLIST);
 void return_(int userid, BookList *BOOKLIST, UserList *USERLIST);
+void who_borrow(int bookid, BookList *BOOKLIST, UserList *USERLIST);
+int cmp_char(char *x, char *y);
 #endif //CWK1_UTILS_H

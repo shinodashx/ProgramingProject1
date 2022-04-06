@@ -17,8 +17,13 @@ int borrow_book(int bookid, int userid, BookList *BOOKLIST, UserList *USERLIST) 
             p->copies = p->copies - 1;
             while (pp != NULL) {
                 if (userid == pp->id) {
-                    pp->borrowednumber = pp->borrowednumber + 1;
-                    pp->borrowedId[pp->borrowednumber] = p->id;
+                    pp->borrowednumber = pp->borrowednumber+1;
+                    BorrowList *lst = pp->borrowbook;
+                    while(lst->next!=NULL) lst = lst->next;
+                    BorrowList *tmp = (BorrowList *) malloc(sizeof (BorrowList));
+                    tmp->next = NULL;
+                    tmp->bookid = bookid;
+                    lst->next = tmp;
                 }
                 pp = pp->next;
             }
@@ -29,24 +34,31 @@ int borrow_book(int bookid, int userid, BookList *BOOKLIST, UserList *USERLIST) 
     return 0;
 }
 
-
 int return_book(int bookid, int userid, BookList *BOOKLIST, UserList *USERLIST) {
     User *pp = USERLIST->list;
     int flag = 1;
     while (pp != NULL) {
         if (pp->id == userid) {
+            BorrowList *brp = pp->borrowbook;
             int cnt = 0;
-            int pos = -1;
-            for (int i = 1; i <= pp->borrowednumber; ++i) {
-                if (bookid == pp->borrowedId[i]) {
+            if(brp->next == NULL) return 0;
+            if(brp->next->next == NULL){
+                if(brp->next->bookid == bookid) {
+                    pp->borrowednumber = pp->borrowednumber - 1;
+                    brp->next = NULL;
+                    break;
+                } else {
+                    return 0;
+                }
+            }
+            while(brp->next->next!=NULL){
+                if(brp->next->bookid == bookid) {
                     cnt++;
-                    pos = i;
+                    brp->next = brp->next->next;
+                    break;
                 }
             }
             if (cnt == 0) return 0;
-            for (int i = pos; i <= pp->borrowednumber; ++i) {
-                pp->borrowedId[i] = pp->borrowedId[i + 1];
-            }
             pp->borrowednumber = pp->borrowednumber - 1;
         }
         pp = pp->next;
@@ -61,7 +73,6 @@ int return_book(int bookid, int userid, BookList *BOOKLIST, UserList *USERLIST) 
         p = p->next;
     }
     return -1;
-
 }
 
 int min(int x, int y) {
@@ -72,6 +83,14 @@ int min(int x, int y) {
 int max(int x, int y) {
     if (x > y) return x;
     else return y;
+}
+
+int cmp_char(char *x, char *y){
+    if(strlen(x)!=strlen(y)) return 0;
+    for(int i = 0;i<=min(strlen(x),strlen(y));++i){
+        if(x[i]!=y[i]) return 0;
+    }
+    return 1;
 }
 
 int check_user_id(char *username, UserList *USERLIST) {
@@ -85,49 +104,67 @@ int check_user_id(char *username, UserList *USERLIST) {
 }
 
 int check_username(char *username, UserList *USERLIST) {
+    for(int i = 0 ;i<(int)(strlen(username));++i){
+        if(username[i] == ' ') return -1;
+    }
     User *p = USERLIST->list->next;
     while (p != NULL) {
         int cnt = 0;
-        if ((int) strlen(username) == (int) strlen(p->username)) {
-            for (int i = 0; i < min((int) strlen(username), (int)(p->username)); ++i) {
-                if (username[i] == p->username[i]) cnt++;
-            }
-            if (cnt == strlen(username)) return 0;
+        if(cmp_char(username,p->username) == 1){
+            return 0;
         }
         p = p->next;
     }
     return 1;
 }
 
-
 void user_register(int usertype, BookList *BOOKLIST, UserList *USERLIST) {
     printf("================================================================\n");
     printf("Please input your user name:\n");
-    char *username = malloc(sizeof(1000));
+    char *username = malloc(sizeof(40960));
     while (1) {
-        scanf("%s", username);
-        if (check_username(username, USERLIST)) break;
-        else {
+        fgets(username,40960,stdin);
+        username[strlen(username)-1] = '\0';
+        int resc = check_username(username, USERLIST);
+        if (resc == 1) break;
+        else if(resc == 0){
             printf("================================================================\n");
             printf("The username is used, please input another username.\n");
+            return;
+        } else {
+            printf("================================================================\n");
+            printf("The username should not contain spaces.\n");
+            return;
         }
     }
-    char *password = malloc(sizeof(1000));
+    char *password = malloc(sizeof(40960));\
+    printf("================================================================\n");
     printf("Please input your password:\n");
-    scanf("%s", password);
-    getchar();
+    fgets(password,40960,stdin);
+    password[strlen(password)-1] = '\0';
+    for(int i = 0;i< strlen(password);++i){
+        if(password[i] == ' ') {
+            printf("================================================================\n");
+            printf("The password should not contain spaces.\n");
+            return;
+        }
+    }
     User *now = (User *) malloc(sizeof(User));
-    int id;
     now->username = username;
     now->password = password;
-    now->userType = 0;
+    now->userType = usertype;
     now->borrowednumber = 0;
-    User *last = USERLIST->list->next;
+    BorrowList *borrowHead = (BorrowList *)malloc(sizeof(BorrowList));
+    borrowHead->next = NULL;
+    now->borrowbook = borrowHead;
+    User *last = USERLIST->list;
     while (last->next != NULL) last = last->next;
     now->id = last->id + 1;
     now->next = NULL;
     last->next = now;
     USERLIST->length = USERLIST->length + 1;
+    printf("================================================================\n");
+    printf("Successfully register!\n");
 }
 
 
@@ -137,9 +174,7 @@ void listBook(BookList *BOOKLIST) {
         printf("%s\t%s\n", cur->title, cur->authors);
         cur = cur->next;
     }
-    //printf("%s\t%s\n", cur->title, cur->authors);
 }
-
 
 void listUser(UserList *USERLIST) {
     User *cur = USERLIST->list->next;
@@ -147,7 +182,6 @@ void listUser(UserList *USERLIST) {
         printf("%s\t%s\n", cur->username, cur->password);
         cur = cur->next;
     }
-    //printf("%s\t%s\n", cur->username, cur->password);
 }
 
 int list_my_borrowedbook(int userid, BookList *BOOKLIST, UserList *USERLIST) {
@@ -159,11 +193,14 @@ int list_my_borrowedbook(int userid, BookList *BOOKLIST, UserList *USERLIST) {
     for (int i = 0; i <= 10; ++i) {
         tmp[i] = -1;
     }
+    int ct = 0;
     while (up != NULL) {
         if (up->id == userid) {
             if (up->borrowednumber == 0) return 1;
-            for (int i = 1; i <= (int) up->borrowednumber; ++i) {
-                tmp[i] = up->borrowedId[i];
+            BorrowList *lst = up->borrowbook->next;
+            while(lst!=NULL) {
+                tmp[++ct] = lst->bookid;
+                lst = lst->next;
             }
             tot = up->borrowednumber;
         }
@@ -206,6 +243,7 @@ void borrow_function(BookList res, int userid, BookList *BOOKLIST, UserList *USE
             printf("Successfully\n");
         } else if (resb == 2) {
             printf("Be borrowed\n");
+            getchar();
         } else {
             printf("Cannot find this book\n");
         }
@@ -214,7 +252,7 @@ void borrow_function(BookList res, int userid, BookList *BOOKLIST, UserList *USE
 
 int get_op() {
     char OP[100];
-    fgets(OP, 1024, stdin);
+    fgets(OP, 40960, stdin);
     int OP_flag = 1;
     for (int i = 0; i < (int) strlen(OP) - 1; ++i) {
         if (OP[i] < '0' || OP[i] > '9') {
@@ -234,7 +272,7 @@ void find_book(int choice, BookList *BOOKLIST) {
         printf("================================================================\n");
         printf("Please input book title\n");
         char bookTitle[100];
-        fgets(bookTitle, 100, stdin);
+        fgets(bookTitle, 40960, stdin);
         bookTitle[strlen(bookTitle) - 1] = '\0';
         BookList res = find_book_by_title(bookTitle, BOOKLIST);
         if (res.length == 0) {
@@ -248,7 +286,7 @@ void find_book(int choice, BookList *BOOKLIST) {
         printf("================================================================\n");
         printf("Please input book author\n");
         char bookAuthor[100];
-        fgets(bookAuthor, 100, stdin);
+        fgets(bookAuthor, 40960, stdin);
         BookList res = find_book_by_author(bookAuthor, BOOKLIST);
         if (res.length == 0) {
             printf("================================================================\n");
@@ -292,7 +330,6 @@ void borrow(int userid, BookList *BOOKLIST, UserList *USERLIST){
         printf("You have borrowed 8 books, please return books.\n");
         return;
     }
-
     printf("1.Borrowed by book id.\n");
     printf("2.Borrowed by book title.\n");
     printf("3.borrowed by book author.\n");
@@ -377,4 +414,31 @@ void return_(int userid, BookList *BOOKLIST, UserList *USERLIST){
     if (resr == 1) printf("Successfully!\n");
     if (resr == 0) printf("You haven't borrowed this book!\n");
     if (resr == -1) printf("This book is not in library!\n");
+}
+
+void who_borrow(int bookid, BookList *BOOKLIST, UserList *USERLIST){
+    int flag = 0;
+    User *p = USERLIST -> list;
+    while(p!= NULL){
+        if(p->borrowednumber > 0){
+            int cnt = 0;
+            BorrowList *brp = p->borrowbook;
+            while(brp!=NULL){
+                if(brp->bookid == bookid) {
+                    cnt++;
+                }
+                brp = brp->next;
+            }
+            if(cnt > 0){
+                flag = 1;
+                printf("================================================================\n");
+                printf("userid: %d  username: %s\tnumber: %d\n",p->id,p->username,cnt);
+            }
+        }
+        p = p->next;
+    }
+    if(!flag){
+        printf("================================================================\n");
+        printf("No one has borrowed this book!\n");
+    }
 }

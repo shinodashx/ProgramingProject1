@@ -49,7 +49,5 @@ int user_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
         if (usOp == 7) {
             return 0;
         }
-
     }
-
 }

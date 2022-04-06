@@ -33,7 +33,11 @@ void run_interface(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList 
         printf("================================================================\n");
 
         int op = get_op();
-        if (op == -1) continue;
+        if (op == -1) {
+            printf("================================================================\n");
+            printf("Error choice, please choose your choice:(Input choice number)\n");
+            continue;
+        }
         if (op > 3 || op < 1) {
             printf("================================================================\n");
             printf("Error choice, please choose your choice:(Input choice number)\n");

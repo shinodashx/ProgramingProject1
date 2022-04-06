@@ -16,6 +16,7 @@ int load_books(FILE *file, BookList *BOOKLIST) {
     Book *BookHead = (Book *) malloc(sizeof(Book));
     BOOKLIST->list = BookHead;
     BookHead->next = NULL;
+    BOOKLIST->length = 0;
     char booknum[100];
     int bookNum = 0;
 //    fscanf(file, "%d\n", &bookNum);
@@ -42,10 +43,9 @@ int load_books(FILE *file, BookList *BOOKLIST) {
             Book *last;
             last = BOOKLIST->list;
             while (last->next != NULL) last = last->next;
-
             now = (Book *) malloc(sizeof(Book));
             char *str = malloc(sizeof(1000));
-            fgets(str, 1024, file);
+            fgets(str, 40960, file);
             char *x;
             x = strtok(str, "-");
             now->id = (int) atoi(x);
@@ -63,14 +63,12 @@ int load_books(FILE *file, BookList *BOOKLIST) {
             now->copies = atoi(x);
             x = strtok(NULL, "-");
             now->borrowed = atoi(x);
-
             now->next = NULL;
             last->next = now;
         }
         BOOKLIST->length = bookNum;
     }
     return 0;
-    //listBook(BOOKLIST);
 }
 
 int load_users(FILE *file, UserList *USERLIST) {
@@ -78,6 +76,7 @@ int load_users(FILE *file, UserList *USERLIST) {
     User *UserHead = (User *) malloc(sizeof(User));
     UserHead->next = NULL;
     USERLIST->list = UserHead;
+    USERLIST->length = 0;
     char usernum[100];
     int userNum = 0;
 //    fscanf(file, "%d\n", &bookNum);
@@ -105,7 +104,7 @@ int load_users(FILE *file, UserList *USERLIST) {
         while (last->next != NULL) last = last->next;
         now = (User *) malloc(sizeof(User));
         char *str = malloc(sizeof(1000));
-        fgets(str, 1024, file);
+        fgets(str, 40960, file);
         char *x;
         x = strtok(str, "-");
         now->id = (int) atoi(x);
@@ -123,9 +122,24 @@ int load_users(FILE *file, UserList *USERLIST) {
 //        puts(now->password);
         x = strtok(NULL, "-");
         now->borrowednumber = (int) atoi(x);
-        for (int j = 1; j <= (int) now->borrowednumber; ++j) {
-            fscanf(file, "%d\n", &now->borrowedId[j]);
+        BorrowList *borrowHead = (BorrowList *)malloc(sizeof(BorrowList));
+        borrowHead->next = NULL;
+        BorrowList *lst = borrowHead;
+        while(lst->next != NULL) lst = lst->next;
+        //now->borrowbook = *borrowHead
+        //printf("%d\n",now->borrowednumber);
+        if((int)now->borrowednumber!=0) {
+            for (int j = 1; j <= (int) now->borrowednumber; ++j) {
+                int xx;
+                fscanf(file, "%d\n", &xx);
+                BorrowList *tmp = (BorrowList *) malloc(sizeof(BorrowList));
+                tmp->bookid = xx;
+                tmp->next = NULL;
+                lst->next = tmp;
+                lst = lst->next;
+            }
         }
+        now ->borrowbook = borrowHead;
         now->next = NULL;
         last->next = now;
     }
@@ -133,7 +147,6 @@ int load_users(FILE *file, UserList *USERLIST) {
     //listUser(USERLIST);
     return 0;
 }
-
 
 void load_file(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList *USERLIST) {
 
@@ -173,7 +186,6 @@ int store_books(FILE *file, BookList *BOOKLIST) {
     return 0;
 }
 
-
 int store_users(FILE *file, UserList *USERLIST) {
     if (file == NULL) return 1;
     fprintf(file, "%d\n", (int) USERLIST->length);
@@ -185,8 +197,12 @@ int store_users(FILE *file, UserList *USERLIST) {
         fprintf(file, "%s-", up->username);
         fprintf(file, "%s-", up->password);
         fprintf(file, "%d-\n", up->borrowednumber);
-        for (int i = 1; i <= (int) up->borrowednumber; ++i) {
-            fprintf(file, "%d\n", up->borrowedId[i]);
+        if(up->borrowednumber != 0){
+            BorrowList *brp = up->borrowbook->next;
+            while(brp!=NULL){
+                fprintf(file, "%d\n", brp->bookid);
+                brp = brp->next;
+            }
         }
         up = up->next;
     }
@@ -208,11 +224,9 @@ void store_file(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList *US
     }
     fclose(Book_File);
     fclose(User_File);
-
 }
 
 BookList find_book_by_author(const char *author, BookList *BOOKLIST) {
-
     BookList res;
     res.length = 0;
     Book *head = (Book *) malloc(sizeof(Book));
@@ -239,7 +253,6 @@ BookList find_book_by_author(const char *author, BookList *BOOKLIST) {
         p = p->next;
     }
     return res;
-
 }
 
 BookList find_book_by_title(const char *title, BookList *BOOKLIST) {
@@ -337,6 +350,18 @@ int remove_book(Book book, BookList *BOOKLIST) {
 }
 
 int add_book(Book book, BookList *BOOKLIST) {
+
+    Book *cp = BOOKLIST->list->next;
+    while(cp!=NULL){
+        if(cmp_char(cp->authors,book.authors) == 1 && cmp_char(cp->title,book.title) == 1&&cp->year == book.year){
+            //printf("%d\n %d,\n",book.copies,cp->copies);
+            cp->copies = cp->copies+book.copies;
+            return 0;
+        }
+        cp = cp->next;
+    }
+    //printf("%d\n",book.copies);
+    //printf("%d,\n",book.year);
     if (book.year > 2022) return 1;
     Book *now = (Book *) malloc(sizeof(Book));
     Book *last;

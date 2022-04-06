@@ -25,6 +25,10 @@ typedef struct _BookList {
     unsigned int length; // number of elements in the (Book*) List
 } BookList;
 
+typedef struct _BorrowList{
+    unsigned int bookid;
+    struct _BorrowList *next;
+}BorrowList;
 
 typedef struct _User {
     unsigned id;
@@ -32,7 +36,7 @@ typedef struct _User {
     char *username;
     char *password;
     int borrowednumber;
-    int borrowedId[11];
+    BorrowList *borrowbook;
     struct _User *next;
 } User;
 
@@ -41,6 +45,8 @@ typedef struct UserList {
     User *list;
     unsigned int length;
 } UserList;
+
+
 
 //saves the database of books in the specified file
 //returns 0 if books were stored correctly, or an error code otherwise
