@@ -34,6 +34,4 @@ https://github.com/shinodashx/ProgramingProject1#manager
 
 # version control
 
-
-
-![QQ图片20220407215003](C:\Users\shinoda_shx\Desktop\QQ图片20220407215003.png)
+![](C:\Users\shinoda_shx\Desktop\QQ图片20220407215003.png)
