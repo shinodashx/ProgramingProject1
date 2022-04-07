@@ -43,8 +43,8 @@ int load_books(FILE *file, BookList *BOOKLIST) {
             last = BOOKLIST->list;
             while (last->next != NULL) last = last->next;
             now = (Book *) malloc(sizeof(Book));
-            char *str = malloc(sizeof 40960);
-            fgets(str, 40960, file);
+            char *str = malloc(sizeof 4096);
+            fgets(str, 4096, file);
             int ct = 0;
             char u[1000];
             if (str == NULL) {
@@ -61,7 +61,7 @@ int load_books(FILE *file, BookList *BOOKLIST) {
             }
             char *x;
             x = strtok(str, "-");
-            if (x == NULL || x == "" || x[0] == '\n' || x[0] == '\0') {
+            if (x == NULL || x[0] == '\n' || x[0] == '\0') {
                 printf("Book data error!\n");
                 exit(0);
             }
@@ -75,7 +75,7 @@ int load_books(FILE *file, BookList *BOOKLIST) {
             now->title = x;
             now->title[strlen(x)] = '\0';
             x = strtok(NULL, "-");
-            if (x == NULL || x == "" || x[0] == '\n' || x[0] == '\0') {
+            if (x == NULL || x[0] == '\n' || x[0] == '\0') {
                 printf("Book data error!\n");
                 exit(0);
             }
@@ -83,19 +83,19 @@ int load_books(FILE *file, BookList *BOOKLIST) {
             now->authors = x;
             now->authors[strlen(x)] = '\0';
             x = strtok(NULL, "-");
-            if (x == NULL || x == "" || x[0] == '\n' || x[0] == '\0') {
+            if (x == NULL || x[0] == '\n' || x[0] == '\0') {
                 printf("Book data error!\n");
                 exit(0);
             }
             now->year = atoi(x);
             x = strtok(NULL, "-");
-            if (x == NULL || x == "" || x[0] == '\n' || x[0] == '\0') {
+            if (x == NULL || x[0] == '\n' || x[0] == '\0') {
                 printf("Book data error!\n");
                 exit(0);
             }
             now->copies = atoi(x);
             x = strtok(NULL, "-");
-            if (x == NULL || x == "" || x[0] == '\n' || x[0] == '\0') {
+            if (x == NULL || x[0] == '\n' || x[0] == '\0') {
                 printf("Book data error!\n");
                 exit(0);
             }
@@ -139,27 +139,27 @@ int load_users(FILE *file, UserList *USERLIST) {
         last = USERLIST->list;
         while (last->next != NULL) last = last->next;
         now = (User *) malloc(sizeof(User));
-        char *str = malloc(sizeof(1000));
-        fgets(str, 40960, file);
+        char *str = malloc(sizeof(4096));
+        fgets(str, 4096, file);
         if (str == NULL) {
             printf("User data error!\n");
             exit(0);
         }
         char *x;
         x = strtok(str, "-");
-        if (x == NULL || x == "" || x[0] == '\n' || x[0] == '\0') {
+        if (x == NULL || x[0] == '\n' || x[0] == '\0') {
             printf("User data error!\n");
             exit(0);
         }
         now->id = (int) atoi(x);
         x = strtok(NULL, "-");
-        if (x == NULL || x == "" || x[0] == '\n' || x[0] == '\0') {
+        if (x == NULL || x[0] == '\n' || x[0] == '\0') {
             printf("User data error!\n");
             exit(0);
         }
         now->userType = (int) atoi(x);
         x = strtok(NULL, "-");
-        if (x == NULL || x == "" || x[0] == '\n' || x[0] == '\0') {
+        if (x == NULL || x[0] == '\n' || x[0] == '\0') {
             printf("User data error!\n");
             exit(0);
         }
@@ -167,7 +167,7 @@ int load_users(FILE *file, UserList *USERLIST) {
         now->username = x;
         now->username[strlen(x)] = '\0';
         x = strtok(NULL, "-");
-        if (x == NULL || x == "" || x[0] == '\n' || x[0] == '\0') {
+        if (x == NULL || x[0] == '\n' || x[0] == '\0') {
             printf("User data error!\n");
             exit(0);
         }
@@ -175,7 +175,7 @@ int load_users(FILE *file, UserList *USERLIST) {
         now->password = x;
         now->password[strlen(x)] = '\0';
         x = strtok(NULL, "-");
-        if (x == NULL || x == "" || x[0] == '\n' || x[0] == '\0') {
+        if (x == NULL || x[0] == '\n' || x[0] == '\0') {
             printf("User data error!\n");
             exit(0);
         }
@@ -186,8 +186,8 @@ int load_users(FILE *file, UserList *USERLIST) {
         while (lst->next != NULL) lst = lst->next;
         if ((int) now->borrowednumber != 0) {
             for (int j = 1; j <= (int) now->borrowednumber; ++j) {
-                char *xxc = malloc(sizeof 40960);
-                fgets(xxc, 40960, file);
+                char *xxc = malloc(sizeof 4096);
+                fgets(xxc, 4096, file);
                 xxc[strlen(xxc) - 1] = '\0';
                 for (int k = 0; k < strlen(xxc); ++k) {
                     if (xxc[k] > '9' || xxc[k] < '0') {
@@ -298,6 +298,7 @@ BookList find_book_by_author(const char *author, BookList *BOOKLIST) {
     Book *head = (Book *) malloc(sizeof(Book));
     head->next = NULL;
     res.list = head;
+    Book *last = res.list;
     Book *p = BOOKLIST->list->next;
     while (p != NULL) {
         int flag = 1;
@@ -309,15 +310,18 @@ BookList find_book_by_author(const char *author, BookList *BOOKLIST) {
             }
         }
         if (flag) {
-            res.length = 1;
+            res.length += 1;
             Book *now = (Book *) malloc(sizeof(Book));
             memccpy(now, p, sizeof(Book), sizeof(Book));
             now->next = NULL;
-            res.list->next = now;
-            return res;
+            last->next = now;
+            last = last->next;
+            //res.list->next = now;
+            //return res;
         }
         p = p->next;
     }
+    if(res.length == 0) res.list = NULL;
     return res;
 }
 
@@ -327,6 +331,7 @@ BookList find_book_by_title(const char *title, BookList *BOOKLIST) {
     Book *head = (Book *) malloc(sizeof(Book));
     head->next = NULL;
     res.list = head;
+    Book *last = res.list;
     Book *p = BOOKLIST->list->next;
     while (p != NULL) {
         int flag = 1;
@@ -338,17 +343,19 @@ BookList find_book_by_title(const char *title, BookList *BOOKLIST) {
             }
         }
         if (flag) {
-            res.length = 1;
+            res.length += 1;
             Book *now = (Book *) malloc(sizeof(Book));
             memccpy(now, p, sizeof(Book), sizeof(Book));
             now->next = NULL;
-            res.list->next = now;
-            return res;
+            last->next = now;
+            last = last->next;
+            //res.list->next = now;
+            //return res;
         }
         p = p->next;
     }
+    if(res.length == 0) res.list = NULL;
     return res;
-
 }
 
 BookList find_book_by_year(unsigned int year, BookList *BOOKLIST) {
@@ -357,22 +364,25 @@ BookList find_book_by_year(unsigned int year, BookList *BOOKLIST) {
     Book *head = (Book *) malloc(sizeof(Book));
     head->next = NULL;
     res.list = head;
-
+    Book *last = res.list;
     Book *p = BOOKLIST->list;
     while (p != NULL) {
         int flag = 0;
         if ((int) year == (int) p->year) flag = 1;
         if (flag) {
-            res.length = 1;
+            printf("%d\n",p->id);
+            res.length += 1;
             Book *now = (Book *) malloc(sizeof(Book));
             memccpy(now, p, sizeof(Book), sizeof(Book));
             now->next = NULL;
-            res.list->next = now;
-            return res;
+            last->next = now;
+            last = last->next;
+            //res.list->next = now;
+            //return res;
         }
         p = p->next;
     }
-    res.list = NULL;
+    if(res.length == 0) res.list = NULL;
     return res;
 }
 
@@ -408,6 +418,7 @@ int remove_book(Book book, BookList *BOOKLIST) {
     p = BOOKLIST->list;
     while (p != NULL) {
         if (p->next->id == id) {
+            BOOKLIST->length = BOOKLIST->length - 1;
             p->next = p->next->next;
             return 0;
         }

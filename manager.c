@@ -32,14 +32,14 @@ int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
             //Read in and store the book information to be added
             Book *book = (Book *) malloc(sizeof(Book));
             printf("Please input book title:\n");
-            char *title = malloc(sizeof(40960));
-            fgets(title, 40960, stdin);
+            char *title = malloc(sizeof(4096));
+            fgets(title, 4096, stdin);
             book->title = malloc(sizeof(strlen(title) - 1));
             title[strlen(title) - 1] = '\0';
             book->title = title;
-            char *author = malloc(sizeof(40960));
+            char *author = malloc(sizeof(4096));
             printf("Please input book author:\n");
-            fgets(author, 40960, stdin);
+            fgets(author, 4096, stdin);
             book->authors = malloc(sizeof(strlen(author) - 1));
             author[strlen(author) - 1] = '\0';
             book->authors = author;
@@ -57,7 +57,6 @@ int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
             }
             book->year = year;
             book->copies = copies;
-            printf("%d\n", copies);
             book->borrowed = 0;
             int res = add_book(*book, BOOKLIST);
             if (res == 0) printf("Successfully added!\n");

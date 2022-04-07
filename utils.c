@@ -115,7 +115,6 @@ int check_username(char *username, UserList *USERLIST) {
     }
     User *p = USERLIST->list->next;
     while (p != NULL) {
-        int cnt = 0;
         if (cmp_char(username, p->username) == 1) {
             return 0;
         }
@@ -128,9 +127,9 @@ int check_username(char *username, UserList *USERLIST) {
 void user_register(int usertype, BookList *BOOKLIST, UserList *USERLIST) {
     printf("================================================================\n");
     printf("Please input your user name:\n");
-    char *username = malloc(sizeof 40960);
+    char *username = malloc(sizeof 200);
     while (1) {
-        fgets(username, 40960, stdin);
+        fgets(username, 200, stdin);
         username[strlen(username) - 1] = '\0';
         int resc = check_username(username, USERLIST);
         if (resc == 1) break;
@@ -144,10 +143,10 @@ void user_register(int usertype, BookList *BOOKLIST, UserList *USERLIST) {
             return;
         }
     }
-    char *password = malloc(sizeof(40960));\
+    char *password = malloc(sizeof(200));
     printf("================================================================\n");
     printf("Please input your password:\n");
-    fgets(password, 40960, stdin);
+    fgets(password, 200, stdin);
     password[strlen(password) - 1] = '\0';
     for (int i = 0; i < strlen(password); ++i) {
         if (password[i] == ' ') {
@@ -178,7 +177,7 @@ void user_register(int usertype, BookList *BOOKLIST, UserList *USERLIST) {
 void listBook(BookList *BOOKLIST) {
     Book *cur = BOOKLIST->list->next;
     while (cur != NULL) {
-        printf("id: %d\ttitle: %s\tauthors: %s\tyear: year\n", cur->id, cur->title, cur->authors, cur->year);
+        printf("id: %d\ttitle: %s\tauthors: %s\tyear: %u\n", cur->id, cur->title, cur->authors, cur->year);
         cur = cur->next;
     }
 }
@@ -234,12 +233,15 @@ int list_my_borrowedbook(int userid, BookList *BOOKLIST, UserList *USERLIST) {
 
 //Display book information.
 void print_books(BookList res) {
-    printf("================================================================\n");
-    printf("book id: %d\t", res.list->next->id);
-    printf("title: %s\t", res.list->next->title);
-    printf("author: %s\t", res.list->next->authors);
-    printf("year: %d\t", res.list->next->year);
-    printf("copies: %d\n", res.list->next->copies);
+    Book *p = res.list->next;
+    while(p!=NULL){    printf("================================================================\n");
+        printf("book id: %d\t", p->id);
+        printf("title: %s\t", p->title);
+        printf("author: %s\t", p->authors);
+        printf("year: %d\t", p->year);
+        printf("copies: %d\n", p->copies);
+        p = p->next;
+    }
 }
 
 //Borrowing a book function.
@@ -263,7 +265,7 @@ void borrow_function(BookList res, int userid, BookList *BOOKLIST, UserList *USE
 //Check if the input is a number, if not return -1, otherwise return a number.
 int get_op() {
     char OP[100];
-    fgets(OP, 40960, stdin);
+    fgets(OP, 10240, stdin);
     int OP_flag = 1;
     for (int i = 0; i < (int) strlen(OP) - 1; ++i) {
         if (OP[i] < '0' || OP[i] > '9') {
@@ -279,17 +281,18 @@ int get_op() {
 }
 
 //According to the user's selection, the sub-table calls three lookup functions.
-void find_book(int choice, BookList *BOOKLIST) {
+int find_book(int choice, BookList *BOOKLIST) {
     if (choice == 1) {
         printf("================================================================\n");
         printf("Please input book title\n");
         char bookTitle[100];
-        fgets(bookTitle, 40960, stdin);
+        fgets(bookTitle, 4096, stdin);
         bookTitle[strlen(bookTitle) - 1] = '\0';
         BookList res = find_book_by_title(bookTitle, BOOKLIST);
         if (res.length == 0) {
             printf("================================================================\n");
             printf("Cannot find this book:!\n");
+            return -1;
         } else {
             print_books(res);
         }
@@ -298,11 +301,13 @@ void find_book(int choice, BookList *BOOKLIST) {
         printf("================================================================\n");
         printf("Please input book author\n");
         char bookAuthor[100];
-        fgets(bookAuthor, 40960, stdin);
+        fgets(bookAuthor, 4096, stdin);
+        bookAuthor[strlen(bookAuthor) - 1] = '\0';
         BookList res = find_book_by_author(bookAuthor, BOOKLIST);
         if (res.length == 0) {
             printf("================================================================\n");
             printf("Cannot find this book:!\n");
+            return -1;
         } else {
             print_books(res);
         }
@@ -314,15 +319,38 @@ void find_book(int choice, BookList *BOOKLIST) {
         if (year == -1) {
             printf("================================================================\n");
             printf("Error input!\n");
-            return;
+            return -1;
         }
         BookList res = find_book_by_year(year, BOOKLIST);
         if (res.length == 0) {
             printf("================================================================\n");
             printf("Cannot find this book:!\n");
+            return -1;
         } else {
             print_books(res);
         }
+    }
+    return 0;
+}
+
+void borrow_by_id(int userid, UserList *USERLIST, BookList *BOOKLIST){
+    printf("================================================================\n");
+    printf("Please input book id:\n");
+    int id = get_op();
+    if (id == -1) {
+        printf("Invalid id!\n");
+        return;
+    }
+    int resb = borrow_book(id, userid, BOOKLIST, USERLIST);
+    if (resb == 1) {
+        printf("================================================================\n");
+        printf("Successfully\n");
+    } else if (resb == 2) {
+        printf("================================================================\n");
+        printf("Be borrowed\n");
+    } else {
+        printf("================================================================\n");
+        printf("Cannot find this book\n");
     }
 }
 
@@ -359,58 +387,23 @@ void borrow(int userid, BookList *BOOKLIST, UserList *USERLIST) {
         break;
     }
     if (br_op == 1) {
-        printf("================================================================\n");
-        printf("Please input book id:\n");
-        int id = get_op();
-        if (id == -1) {
-            printf("Invalid id!\n");
-            return;
-        }
-        int resb = borrow_book(id, userid, BOOKLIST, USERLIST);
-        if (resb == 1) {
-            printf("================================================================\n");
-            printf("Successfully\n");
-        } else if (resb == 2) {
-            printf("================================================================\n");
-            printf("Be borrowed\n");
-        } else {
-            printf("================================================================\n");
-            printf("Cannot find this book");
-        }
+        borrow_by_id(userid,USERLIST,BOOKLIST);
+        return;
     } else if (br_op == 2) {
-        printf("================================================================\n");
-        printf("Please input book title\n");
-        char bookTitle[100];
-        scanf("%s", bookTitle);
-        BookList res = find_book_by_title(bookTitle, BOOKLIST);
-        borrow_function(res, userid, BOOKLIST, USERLIST);
+        int u = find_book(1,BOOKLIST);
+        if(u == -1) return;
+        borrow_by_id(userid,USERLIST,BOOKLIST);
+        return;
     } else if (br_op == 3) {
-        printf("================================================================\n");
-        printf("Please input book author\n");
-        char bookAuthor[100];
-        scanf("%s", bookAuthor);
-        BookList res = find_book_by_author(bookAuthor, BOOKLIST);
-        borrow_function(res, userid, BOOKLIST, USERLIST);
+        int u = find_book(2,BOOKLIST);
+        if(u == -1) return;
+        borrow_by_id(userid,USERLIST,BOOKLIST);
+        return;
     } else if (br_op == 4) {
-        printf("================================================================\n");
-        printf("Please input book year\n");
-        char yearc[110];
-        scanf("%s", yearc);
-        int idcflag = 1;
-        for (int i = 0; i < (int) strlen(yearc); ++i) {
-            if (yearc[i] > '9' || yearc[i] < '0') {
-                idcflag = 0;
-                break;
-            }
-        }
-        if (!idcflag) {
-            printf("================================================================\n");
-            printf("Invalid id!\n");
-            return;
-        }
-        int year = (int) atoi(yearc);
-        BookList res = find_book_by_year(year, BOOKLIST);
-        borrow_function(res, userid, BOOKLIST, USERLIST);
+        int u = find_book(3,BOOKLIST);
+        if(u == -1) return;
+        borrow_by_id(userid,USERLIST,BOOKLIST);
+        return;
     }
 }
 
