@@ -6,7 +6,7 @@
 #include "manager.h"
 #include "utils.h"
 
-
+//Check if the username and password are correct, and check if the password and username match. If the username does not exist, return 3, and if the password is incorrect, return 2. If the username and password match, return a number representing the user type.
 int userLogin(const char *username, const char *password, UserList *USERLIST) {
     User *p = USERLIST->list->next;
     while (p != NULL) {
@@ -33,12 +33,7 @@ void run_interface(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList 
         printf("================================================================\n");
 
         int op = get_op();
-        if (op == -1) {
-            printf("================================================================\n");
-            printf("Error choice, please choose your choice:(Input choice number)\n");
-            continue;
-        }
-        if (op > 3 || op < 1) {
+        if (op > 3 || op < 1 || op == -1) {
             printf("================================================================\n");
             printf("Error choice, please choose your choice:(Input choice number)\n");
             continue;
@@ -48,7 +43,6 @@ void run_interface(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList 
             printf("Please choose your user type:(Input choice number)\n");
             printf("1.User.\n");
             printf("2.Manager.\n");
-
             int rg_op;
             while (1) {
                 rg_op = get_op();
@@ -90,6 +84,8 @@ void run_interface(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList 
             }
         }
         if (op == 3) {
+            printf("================================================================\n");
+            printf("Welcome to use this system next time\n");
             store_file(BookFile, UserFile, BOOKLIST, USERLIST);
             exit(0);
         }

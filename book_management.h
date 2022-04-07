@@ -86,18 +86,21 @@ BookList find_book_by_year(unsigned int year, BookList *BOOKLIST);
 
 
 
-
-
-void store_file(char *BookFile,char *UserFile,BookList *BOOKLIST, UserList *USERLIST);
-
-
-BookList find_book_by_id(unsigned int id, BookList *BOOKLIST);
-
+//Call function to read book and user information from file
 void load_file(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList *USERLIST);
 
+//Call the function to store the book and user information in a file
+void store_file(char *BookFile,char *UserFile,BookList *BOOKLIST, UserList *USERLIST);
+
+//Save book information from linked list into txt file
 int load_users(FILE *UserFile, UserList *USERLIST);
 
+//Save user information from linked list into txt file
 int store_users(FILE *BookFile, UserList *USERLIST);
 
-
+//finds books with the given id.
+//returns a Booklist structure, where the field "list" is a newly allocated list of books, or null if no book with the
+//provided title can be found. The length of the list is also recorded in the returned structure, with 0 in case
+//list is the NULL pointer.
+BookList find_book_by_id(unsigned int id, BookList *BOOKLIST);
 #endif

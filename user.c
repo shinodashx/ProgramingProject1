@@ -20,7 +20,6 @@ int user_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
         printf("################################################################\n");
         printf("================================================================\n");
         int usOp = get_op();
-//        printf("%d", usOp);
         if (usOp == -1 || usOp > 7 || usOp < 1) {
             printf("================================================================\n");
             printf("Error choice, please choose your choice:(Input choice number)\n");
@@ -36,10 +35,10 @@ int user_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
             find_book(usOp, BOOKLIST);
         }
         if (usOp == 4) {
-            borrow(userid,BOOKLIST,USERLIST);
+            borrow(userid, BOOKLIST, USERLIST);
         }
         if (usOp == 5) {
-            return_(userid,BOOKLIST,USERLIST);
+            return_(userid, BOOKLIST, USERLIST);
         }
         if (usOp == 6) {
             printf("================================================================\n");

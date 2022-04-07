@@ -19,49 +19,52 @@ int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
         printf("#    7.Return book                                             #\n");
         printf("#    8.List my borrowed books                                  #\n");
         printf("#    9.List user by borrowed book                              #\n");
-        printf("#    10.exit                                                   #\n");
+        printf("#    10.List all books                                         #\n");
+        printf("#    11.exit                                                   #\n");
         printf("################################################################\n");
         int maOp = get_op();
-        if (maOp == -1 || maOp > 10 || maOp < 1) {
+        if (maOp == -1 || maOp > 11 || maOp < 1) {
             printf("================================================================\n");
             printf("Error choice, please choose your choice:(Input choice number)\n");
             continue;
         }
         if (maOp == 1) {
+            //Read in and store the book information to be added
             Book *book = (Book *) malloc(sizeof(Book));
             printf("Please input book title:\n");
             char *title = malloc(sizeof(40960));
-            fgets(title,40960,stdin);
-            book->title = malloc(sizeof(strlen(title)-1 ));
-            title[strlen(title) - 1] ='\0';
+            fgets(title, 40960, stdin);
+            book->title = malloc(sizeof(strlen(title) - 1));
+            title[strlen(title) - 1] = '\0';
             book->title = title;
             char *author = malloc(sizeof(40960));
             printf("Please input book author:\n");
-            fgets(author,40960,stdin);
+            fgets(author, 40960, stdin);
             book->authors = malloc(sizeof(strlen(author) - 1));
-            author[strlen(author) - 1] ='\0';
+            author[strlen(author) - 1] = '\0';
             book->authors = author;
             printf("Please input book year:\n");
             int year = get_op();
-            if(year ==-1){
+            if (year == -1) {
                 printf("Error year!\n");
                 continue;
             }
             printf("Please input book copies:\n");
             int copies = get_op();
-            if(copies ==-1){
-                printf("Error copies;!\n");
+            if (copies == -1) {
+                printf("Error copies!\n");
                 continue;
             }
             book->year = year;
             book->copies = copies;
-            printf("%d\n",copies);
+            printf("%d\n", copies);
             book->borrowed = 0;
             int res = add_book(*book, BOOKLIST);
             if (res == 0) printf("Successfully added!\n");
             if (res == 1) printf("Invalid year(year > 2022)!\n");
         }
         if (maOp == 2) {
+            //Delete books by book id, and handle error messages.
             printf("Please input book id:\n");
             int id = get_op();
             if (id == -1) {
@@ -95,27 +98,30 @@ int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
             find_book(maOp - 2, BOOKLIST);
         }
         if (maOp == 6) {
-            borrow(userid,BOOKLIST,USERLIST);
+            borrow(userid, BOOKLIST, USERLIST);
         }
         if (maOp == 7) {
-            return_(userid,BOOKLIST,USERLIST);
+            return_(userid, BOOKLIST, USERLIST);
         }
         if (maOp == 8) {
             printf("================================================================\n");
             int res = list_my_borrowedbook(userid, BOOKLIST, USERLIST);
             if (res == 1) printf("You don't have borrowed books.\n");
         }
-        if(maOp == 9){
+        if (maOp == 9) {
             printf("================================================================\n");
             printf("Please input book id\n");
             int bookid = get_op();
-            if(bookid == -1){
+            if (bookid == -1) {
                 printf("Invalid id!\n");
                 continue;
             }
-            who_borrow(bookid,BOOKLIST,USERLIST);
+            who_borrow(bookid, BOOKLIST, USERLIST);
         }
         if (maOp == 10) {
+            listBook(BOOKLIST);
+        }
+        if (maOp == 11) {
             return 0;
         }
     }
