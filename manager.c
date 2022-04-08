@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,41 +7,32 @@
 #include "utils.h"
 
 
-int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
-    while (1) {
-        printf("================================================================\n");
-        printf("################################################################\n");
-        printf("#    Please choose your choice:(Input choice number)           #\n");
-        printf("#    1.Add book                                                #\n");
-        printf("#    2.Remove book                                             #\n");
-        printf("#    3.Find book by title.                                     #\n");
-        printf("#    4.Find book by author                                     #\n");
-        printf("#    5.Find book by year                                       #\n");
-        printf("#    6.Borrow book                                             #\n");
-        printf("#    7.Return book                                             #\n");
-        printf("#    8.List my borrowed books                                  #\n");
-        printf("#    9.List user by borrowed book                              #\n");
-        printf("#    10.List all books                                         #\n");
-        printf("#    11.exit                                                   #\n");
-        printf("################################################################\n");
-        int maOp = get_op();
-        if (maOp == -1 || maOp > 11 || maOp < 1) {
-            printf("================================================================\n");
-            printf("Error choice, please choose your choice:(Input choice number)\n");
-            continue;
-        }
-        if (maOp == 1) {
+void admin_option(BookList *BOOKLIST, UserList *USERLIST) {
+    printf("================================================================\n");
+    printf("################################################################\n");
+    printf("#    Please choose your choice:(Input choice number)           #\n");
+    printf("#    1.Add book                                                #\n");
+    printf("#    2.Remove book                                             #\n");
+    printf("#    3.List user by borrowed book                              #\n");
+    printf("#    4.edit book                                               #\n");
+    printf("#    5.exit                                                   #\n");
+    printf("################################################################\n");
+    int op = get_op();
+    switch (op) {
+        case 1: {
             //Read in and store the book information to be added
             Book *book = (Book *) malloc(sizeof(Book));
             printf("Please input book title:\n");
-            char *title = malloc(sizeof(4096));
-            fgets(title, 4096, stdin);
+            char *title = NULL;
+            size_t len = 0;
+            getline(&title, &len, stdin);
             book->title = malloc(sizeof(strlen(title) - 1));
             title[strlen(title) - 1] = '\0';
             book->title = title;
-            char *author = malloc(sizeof(4096));
             printf("Please input book author:\n");
-            fgets(author, 4096, stdin);
+            char *author = NULL;
+            len = 0;
+            getline(&author, &len, stdin);
             book->authors = malloc(sizeof(strlen(author) - 1));
             author[strlen(author) - 1] = '\0';
             book->authors = author;
@@ -47,13 +40,13 @@ int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
             int year = get_op();
             if (year == -1) {
                 printf("Error year!\n");
-                continue;
+                return;
             }
             printf("Please input book copies:\n");
             int copies = get_op();
             if (copies == -1) {
                 printf("Error copies!\n");
-                continue;
+                return;
             }
             book->year = year;
             book->copies = copies;
@@ -61,15 +54,16 @@ int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
             int res = add_book(*book, BOOKLIST);
             if (res == 0) printf("Successfully added!\n");
             if (res == 1) printf("Invalid year(year > 2022)!\n");
+            return;
         }
-        if (maOp == 2) {
+        case 2: {
             //Delete books by book id, and handle error messages.
             printf("Please input book id:\n");
             int id = get_op();
             if (id == -1) {
                 printf("================================================================\n");
                 printf("Invalid id!\n");
-                continue;
+                return;
             }
             Book book;
             BookList res = find_book_by_id(id, BOOKLIST);
@@ -86,42 +80,92 @@ int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
             if (resr == -1) printf("The book is not in the library\n");
             if (resr == 1) printf("The book is borrowed\n");
             if (resr == 0) printf("Successfully!\n");
+            return;
         }
-        if (maOp == 3) {
-            find_book(maOp - 2, BOOKLIST);
-        }
-        if (maOp == 4) {
-            find_book(maOp - 2, BOOKLIST);
-        }
-        if (maOp == 5) {
-            find_book(maOp - 2, BOOKLIST);
-        }
-        if (maOp == 6) {
-            borrow(userid, BOOKLIST, USERLIST);
-        }
-        if (maOp == 7) {
-            return_(userid, BOOKLIST, USERLIST);
-        }
-        if (maOp == 8) {
-            printf("================================================================\n");
-            int res = list_my_borrowedbook(userid, BOOKLIST, USERLIST);
-            if (res == 1) printf("You don't have borrowed books.\n");
-        }
-        if (maOp == 9) {
+        case 3: {
             printf("================================================================\n");
             printf("Please input book id\n");
             int bookid = get_op();
             if (bookid == -1) {
                 printf("Invalid id!\n");
-                continue;
+                return;
             }
             who_borrow(bookid, BOOKLIST, USERLIST);
+            return;
         }
-        if (maOp == 10) {
-            listBook(BOOKLIST);
+        case 4: {
+            edit_book(BOOKLIST);
+            return;
         }
-        if (maOp == 11) {
-            return 0;
+        case 5: {
+            return;
+        }
+        default: {
+            printf("================================================================\n");
+            printf("Error choice, please choose your choice:(Input choice number)\n");
+            return;
+        }
+    }
+}
+
+int manager_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
+    while (1) {
+        printf("================================================================\n");
+        printf("################################################################\n");
+        printf("#    Please choose your choice:(Input choice number)           #\n");
+        printf("#    1.Admin option                                            #\n");
+        printf("#    2.Find book by title.                                     #\n");
+        printf("#    3.Find book by author                                     #\n");
+        printf("#    4.Find book by year                                       #\n");
+        printf("#    5.Borrow book                                             #\n");
+        printf("#    6.Return book                                             #\n");
+        printf("#    7.List my borrowed books                                  #\n");
+        printf("#    8.List all books                                          #\n");
+        printf("#    9.exit                                                    #\n");
+        printf("################################################################\n");
+        int maOp = get_op();
+        switch (maOp) {
+            case 1: {
+                admin_option(BOOKLIST, USERLIST);
+                continue;
+            }
+            case 2: {
+                find_book(maOp - 1, BOOKLIST);
+                continue;
+            }
+            case 3: {
+                find_book(maOp - 1, BOOKLIST);
+                continue;
+            }
+            case 4: {
+                find_book(maOp - 1, BOOKLIST);
+                continue;
+            }
+            case 5: {
+                borrow(userid, BOOKLIST, USERLIST);
+                continue;
+            }
+            case 6: {
+                return_(userid, BOOKLIST, USERLIST);
+                continue;
+            }
+            case 7: {
+                printf("================================================================\n");
+                int res = list_my_borrowedbook(userid, BOOKLIST, USERLIST);
+                if (res == 1) printf("You don't have borrowed books.\n");
+                continue;
+            }
+            case 8: {
+                listBook(BOOKLIST);
+                continue;
+            }
+            case 9:
+                return 0;
+            default: {
+                printf("================================================================\n");
+                printf("Error choice, please choose your choice:(Input choice number)\n");
+                continue;
+            }
         }
     }
 }

@@ -9,8 +9,8 @@ int main(int argc, char *argv[]) {
     }
     char *BookFile = argv[1];
     char *UserFile = argv[2];
-//    char BookFile[20] = "BookFile.txt";
-//    char UserFile[20] = "UserFile.txt";
+    // char BookFile[20] = "BookFile.txt";
+    // char UserFile[20] = "UserFile.txt";
 
     BookList *BOOKLIST = (BookList *) malloc(sizeof(BookList));
     UserList *USERLIST = (UserList *) malloc(sizeof(UserList));

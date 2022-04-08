@@ -20,33 +20,42 @@ int user_interface(int userid, BookList *BOOKLIST, UserList *USERLIST) {
         printf("################################################################\n");
         printf("================================================================\n");
         int usOp = get_op();
-        if (usOp == -1 || usOp > 7 || usOp < 1) {
-            printf("================================================================\n");
-            printf("Error choice, please choose your choice:(Input choice number)\n");
-            continue;
+        switch (usOp) {
+            case 1: {
+                find_book(usOp, BOOKLIST);
+                continue;
+            }
+            case 2: {
+                find_book(usOp, BOOKLIST);
+                continue;
+            }
+            case 3: {
+                find_book(usOp, BOOKLIST);
+                continue;
+            }
+            case 4: {
+                borrow(userid, BOOKLIST, USERLIST);
+                continue;
+            }
+            case 5: {
+                return_(userid, BOOKLIST, USERLIST);
+                continue;
+            }
+            case 6: {
+                printf("================================================================\n");
+                int res = list_my_borrowedbook(userid, BOOKLIST, USERLIST);
+                if (res == 1) printf("You don't have borrowed books.\n");
+                continue;
+            }
+            case 7: {
+                return 0;
+            }
+            default: {
+                printf("================================================================\n");
+                printf("Error choice, please choose your choice:(Input choice number)\n");
+                continue;
+            }
         }
-        if (usOp == 1) {
-            find_book(usOp, BOOKLIST);
-        }
-        if (usOp == 2) {
-            find_book(usOp, BOOKLIST);
-        }
-        if (usOp == 3) {
-            find_book(usOp, BOOKLIST);
-        }
-        if (usOp == 4) {
-            borrow(userid, BOOKLIST, USERLIST);
-        }
-        if (usOp == 5) {
-            return_(userid, BOOKLIST, USERLIST);
-        }
-        if (usOp == 6) {
-            printf("================================================================\n");
-            int res = list_my_borrowedbook(userid, BOOKLIST, USERLIST);
-            if (res == 1) printf("You don't have borrowed books.\n");
-        }
-        if (usOp == 7) {
-            return 0;
-        }
+
     }
 }

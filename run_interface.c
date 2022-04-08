@@ -71,12 +71,12 @@ void run_interface(char *BookFile, char *UserFile, BookList *BOOKLIST, UserList 
                 printf("================================================================\n");
                 printf("Successfully login!\n");
                 int Userid = check_user_id(userName, USERLIST);
-                int uer_op = user_interface(Userid, BOOKLIST, USERLIST);
+                user_interface(Userid, BOOKLIST, USERLIST);
             } else if (type == 1) {
                 printf("================================================================\n");
                 printf("Successfully login!\n");
                 int Userid = check_user_id(userName, USERLIST);
-                int user_op = manager_interface(Userid, BOOKLIST, USERLIST);
+                manager_interface(Userid, BOOKLIST, USERLIST);
             } else if (type == 2) {
                 printf("Invalid password\n");
             } else {

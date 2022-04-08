@@ -33,4 +33,5 @@ void borrow(int userid, BookList *BOOKLIST, UserList *USERLIST);
 void return_(int userid, BookList *BOOKLIST, UserList *USERLIST);
 void who_borrow(int bookid, BookList *BOOKLIST, UserList *USERLIST);
 int cmp_char(char *x, char *y);
+void edit_book(BookList *BOOKLIST);
 #endif //CWK1_UTILS_H
