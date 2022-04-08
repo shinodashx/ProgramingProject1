@@ -1,4 +1,5 @@
-# ProgramingProject1
+ProgramingProject1
+
 This project realizes the management system of the library through C language, and includes functions such as adding and deleting registration. Users can borrow books.
 
 # Test
@@ -34,4 +35,4 @@ https://github.com/shinodashx/ProgramingProject1#manager
 
 # version control
 
-![](QQ%E5%9B%BE%E7%89%8720220407215003.png)
+![image-20220408151053772](Commits-%C2%B7-shinodashx-ProgramingProject1.png)![1](1.png)
